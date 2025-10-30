@@ -38,4 +38,28 @@ public class Estadia {
                 ", fechaCheckOut=" + fechaCheckOut +
                 '}';
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getIdHabitacion() {
+        return idHabitacion;
+    }
+
+    public LocalDate getFechaCheckIn() {
+        return fechaCheckIn;
+    }
+
+    public void setFechaCheckIn(LocalDate fechaCheckIn) {
+        this.fechaCheckIn = fechaCheckIn;
+    }
+
+    public LocalDate getFechaCheckOut() {
+        return fechaCheckOut;
+    }
+
+    public void setFechaCheckOut(LocalDate fechaCheckOut) {
+        this.fechaCheckOut = fechaCheckOut;
+    }
 }
