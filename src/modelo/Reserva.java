@@ -41,4 +41,36 @@ public class Reserva {
                 ", hasta=" + hasta +
                 '}';
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getIdHabitacion() {
+        return idHabitacion;
+    }
+
+    public String getPasajeroDni() {
+        return pasajeroDni;
+    }
+
+    public void setPasajeroDni(String pasajeroDni) {
+        this.pasajeroDni = pasajeroDni;
+    }
+
+    public LocalDate getDesde() {
+        return desde;
+    }
+
+    public void setDesde(LocalDate desde) {
+        this.desde = desde;
+    }
+
+    public LocalDate getHasta() {
+        return hasta;
+    }
+
+    public void setHasta(LocalDate hasta) {
+        this.hasta = hasta;
+    }
 }
