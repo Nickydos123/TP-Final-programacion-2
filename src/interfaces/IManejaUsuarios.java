@@ -1,0 +1,5 @@
+package interfaces;
+
+public interface IManejaUsuarios {
+    void addUsuario(Usuario usuario, Hotel hotel);
+}

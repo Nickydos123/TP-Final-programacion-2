@@ -1,4 +1,6 @@
 package modelo;
 
-public class Hotel {
+import interfaces.IMuestraHabitaciones;
+
+public class Hotel implements {
 }
