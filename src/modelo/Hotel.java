@@ -120,4 +120,26 @@ public class Hotel {
     public void setUsuarios(Map<String, Usuario> usuarios) {
         this.usuarios = usuarios;
     }
+
+    public Habitacion buscarHabitacionPorId(int habitacionId) {
+        return habitaciones.get(habitacionId);
+    }
+
+    public Reserva buscarReservaPorId(int reservaId) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getId() == reservaId) {
+                return reserva;
+            }
+        }
+        return null;
+    }
+
+    public Estadia buscarEstadiaPorId(int estadiaId) {
+        for (Estadia estadia : estadias) {
+            if (estadia.getId() == estadiaId) {
+                return estadia;
+            }
+        }
+        return null;
+    }
 }
