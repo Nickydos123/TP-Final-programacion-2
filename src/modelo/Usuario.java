@@ -11,4 +11,8 @@ public class Usuario extends Persona{
     public boolean autenticar(String userName, String password){
         return this.userName.equals(userName) && this.password.equals(password);
     }
+
+    protected String getUserName() {
+        return this.userName;
+    }
 }

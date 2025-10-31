@@ -62,4 +62,6 @@ public class Estadia {
     public void setFechaCheckOut(LocalDate fechaCheckOut) {
         this.fechaCheckOut = fechaCheckOut;
     }
+
+
 }
