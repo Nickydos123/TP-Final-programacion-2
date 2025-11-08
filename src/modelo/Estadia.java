@@ -9,6 +9,7 @@ public class Estadia {
     private final int idHabitacion;
     private LocalDate fechaCheckIn;
     private LocalDate fechaCheckOut;
+    private LocalDate fechaCheckOutReal;
 
     public Estadia(int idHabitacion, LocalDate fechaCheckIn, LocalDate fechaCheckOut) {
         cantEstadias++;
@@ -16,6 +17,7 @@ public class Estadia {
         this.idHabitacion = idHabitacion;
         this.fechaCheckIn = fechaCheckIn;
         this.fechaCheckOut = fechaCheckOut;
+        this.fechaCheckOutReal = null;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class Estadia {
                 ", idHabitacion=" + idHabitacion + //Cambiar en caso de que se quiera vincular con una habitacion
                 ", fechaCheckIn=" + fechaCheckIn +
                 ", fechaCheckOut=" + fechaCheckOut +
+                ", fechaCheckOutReal=" + fechaCheckOutReal +
                 '}';
     }
 
@@ -63,5 +66,19 @@ public class Estadia {
         this.fechaCheckOut = fechaCheckOut;
     }
 
+    public static int getCantEstadias() {
+        return cantEstadias;
+    }
 
+    public static void setCantEstadias(int cantEstadias) {
+        Estadia.cantEstadias = cantEstadias;
+    }
+
+    public LocalDate getFechaCheckOutReal() {
+        return fechaCheckOutReal;
+    }
+
+    public void setFechaCheckOutReal(LocalDate fechaCheckOutReal) {
+        this.fechaCheckOutReal = fechaCheckOutReal;
+    }
 }

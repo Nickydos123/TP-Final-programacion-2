@@ -2,89 +2,127 @@ package modelo;
 
 import enums.EestadoHabitacion;
 import exceptions.ExceptionEstadoIlegal;
-import exceptions.ExceptionHabitacionNoDisponible;
 import exceptions.ExceptionReservaConflicto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 public class Hotel {
     private Map<Integer, Habitacion> habitaciones;
-    private HashSet<Reserva> reservas;
-    private List<Estadia> estadias;
+    private Map<Integer,Reserva> reservas;
+    private Map<Integer,Estadia> estadias;
     private Map<String,Usuario> usuarios;
 
-    private void puedeReservarHabitacion(int habitacionId, LocalDate desde, LocalDate hasta) throws ExceptionReservaConflicto {
-        for (Reserva reserva : reservas) {
-            if (reserva.getIdHabitacion() == habitacionId) {
-                if (!(hasta.isBefore(reserva.getDesde()) || desde.isAfter(reserva.getHasta()))) {
-                    throw new ExceptionReservaConflicto("La habitacion ya esta reservada en las fechas indicadas.");
-                }
-
-                if(habitaciones.get(habitacionId).getEestadoHabitacion() == enums.EestadoHabitacion.OCUPADA){
-                    throw new ExceptionReservaConflicto("La habitacion se encuentra ocupada.");
-                }
-
-                if(habitaciones.get(habitacionId).getEestadoHabitacion() == EestadoHabitacion.MANTENIMIENTO){
-                    throw new ExceptionReservaConflicto("La habitacion se encuentra en mantenimiento.");
-                }
-                //La logica de mantenimiento se podria mejorar si se la trata de manera similar a las reservas.
-            }
+    private boolean seSolapanLasFechas(LocalDate desde1, LocalDate hasta1, LocalDate desde2, LocalDate hasta2){
+        if (desde1 == null || hasta1 == null || desde2 == null || hasta2 == null){
+            return false;
         }
+        return desde1.isBefore(hasta2) && desde2.isBefore(hasta1);
+        //Este metodo se encarga de verificar si dos intervalos de fechas se solapan
     }
 
-    public void crearReserva(int habitacionId, String pasajeroDni, LocalDate desde, LocalDate hasta) throws ExceptionReservaConflicto {
+    private void puedeReservarHabitacion(int habitacionId, LocalDate desde, LocalDate hasta) throws ExceptionReservaConflicto {
+        if (desde == null || hasta == null || !desde.isBefore(hasta)) {
+            throw new ExceptionReservaConflicto("Fechas inválidas: 'desde' debe ser antes de 'hasta'.");
+        }
+
+        Habitacion habitacion = habitaciones.get(habitacionId);
+        if(habitacion == null){
+            throw  new ExceptionReservaConflicto("No existe la habitacion buscada");
+        }
+
+        if (habitacion.getEestadoHabitacion() == EestadoHabitacion.MANTENIMIENTO) {
+            throw new ExceptionReservaConflicto("La habitación se encuentra en mantenimiento.");
+        }
+
+
+        for (Reserva reserva : reservas.values()){
+            if(reserva.getIdHabitacion() == habitacionId){
+                if (seSolapanLasFechas(desde,hasta, reserva.getDesde(), reserva.getHasta())){
+                    throw new ExceptionReservaConflicto("La habitacion ya esta reservada en las fechas indicadas");
+                }
+            }
+        }
+
+        for (Estadia estadia : estadias.values()) {
+            if (estadia.getIdHabitacion() == habitacionId) {
+                if (seSolapanLasFechas(desde, hasta, estadia.getFechaCheckIn(), estadia.getFechaCheckOut())) {
+                    throw new ExceptionReservaConflicto("La habitación está ocupada en las fechas indicadas");
+                }
+            }
+        }
+        //Logica para tener en cuenta que una habitacion deberia poder reservarse despues de que deje de estar ocupada
+    }
+
+    public Reserva crearReserva(int habitacionId, String pasajeroDni, LocalDate desde, LocalDate hasta){
         puedeReservarHabitacion(habitacionId, desde, hasta); //Si la habitacion no se puede reservar, lanza una excepcion y termina el codigo.
         Reserva nuevaReserva = new Reserva(habitacionId, pasajeroDni, desde, hasta);//Crea la nueva reserva
-        reservas.add(nuevaReserva);
-        habitaciones.get(habitacionId).setEestadoHabitacion(EestadoHabitacion.RESERVADA);//Cambia el estado de la habitacion a reservada
+        reservas.put(nuevaReserva.getId(),nuevaReserva);
+
+        Habitacion habitacion = habitaciones.get(habitacionId);
+        if(habitacion.getEestadoHabitacion() == EestadoHabitacion.OCUPADA){
+            habitacion.setEestadoHabitacion(EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO);
+        }else{
+            habitacion.setEestadoHabitacion(EestadoHabitacion.RESERVADA);
+        }
+
+        return nuevaReserva;
+        //Cambia el estado de la habitacion a el estado pertinente
     }
 
-    public Estadia checkIn(int reservaId) throws ExceptionHabitacionNoDisponible, ExceptionEstadoIlegal {
-        Reserva reservaBuscada = null;
-        for(Reserva reserva: reservas){
-            if(reserva.getId() == reservaId){
-                reservaBuscada = reserva; //Busco la reserva con el ID proporcionado
-                break;
-            }
-        }
+    public Estadia checkIn(int reservaId) throws ExceptionEstadoIlegal {
+        Reserva reservaBuscada = reservas.get(reservaId);
 
         if (reservaBuscada == null) {
             throw new ExceptionEstadoIlegal("No se encontro la reserva con el ID proporcionado.");//Por si no se encontro la reserva
         }
 
         Habitacion habitacionDeLaReserva = habitaciones.get(reservaBuscada.getIdHabitacion());
-        if (habitacionDeLaReserva.getEestadoHabitacion() != EestadoHabitacion.RESERVADA) {
-            throw new ExceptionEstadoIlegal("La habitacion no esta en estado RESERVADA.");//Por si la habitacion ya no esta reservada
+        if (habitacionDeLaReserva.getEestadoHabitacion() != EestadoHabitacion.RESERVADA && habitacionDeLaReserva.getEestadoHabitacion() != EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO) {
+            throw new ExceptionEstadoIlegal("La habitación no está en estado RESERVADA.");
         }
 
-        habitacionDeLaReserva.setEestadoHabitacion(EestadoHabitacion.OCUPADA);
         Estadia nuevaEstadia = new Estadia(habitacionDeLaReserva.getId(), reservaBuscada.getDesde(), reservaBuscada.getHasta());
-        estadias.add(nuevaEstadia);
-        return nuevaEstadia; //Tambien podria devolver void si no se necesita la estadia creada
-    }
+        estadias.put(nuevaEstadia.getId(), nuevaEstadia);
+        reservas.remove(reservaBuscada.getId());
 
-    public void checkOut(int estadiaId) throws ExceptionEstadoIlegal {
-        Estadia estadiaBuscada = null;
-        for(Estadia estadia: estadias){
-            if(estadia.getId() == estadiaId){
-                estadiaBuscada = estadia; //Busco la estadia con el ID proporcionado
-                break;
+        //Cambio el estado de la habitacion al estado adecuado
+        for (Reserva reserva : reservas.values()){
+            if(reserva.getIdHabitacion() == habitacionDeLaReserva.getId()){
+                habitacionDeLaReserva.setEestadoHabitacion(EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO);
+                return nuevaEstadia;
             }
         }
+        habitacionDeLaReserva.setEestadoHabitacion(EestadoHabitacion.OCUPADA);
+        return nuevaEstadia;
+    }
+
+    public Estadia checkOut(int estadiaId) throws ExceptionEstadoIlegal {
+        Estadia estadiaBuscada = estadias.get(estadiaId);
 
         if (estadiaBuscada == null) {
             throw new ExceptionEstadoIlegal("No se encontro la estadia con el ID proporcionado.");//Por si no se encontro la estadia
         }
 
-        Habitacion habitacion = habitaciones.get(estadiaBuscada.getIdHabitacion());
-        if (habitacion.getEestadoHabitacion() != EestadoHabitacion.OCUPADA) {
+        Habitacion habitacionDeLaEstadia = habitaciones.get(estadiaBuscada.getIdHabitacion());
+        if (habitacionDeLaEstadia == null){
+            throw  new ExceptionEstadoIlegal("No se encontro la habitacion asociada a la estadia");
+        }
+
+        if (habitacionDeLaEstadia.getEestadoHabitacion() != EestadoHabitacion.OCUPADA) {
             throw new ExceptionEstadoIlegal("La habitacion no esta en estado OCUPADA.");//Por si la habitacion no esta ocupada
         }
 
-        habitacion.setEestadoHabitacion(EestadoHabitacion.DISPONIBLE);
+        for (Reserva reserva : reservas.values()){
+            if (reserva.getIdHabitacion() == habitacionDeLaEstadia.getId()){
+                habitacionDeLaEstadia.setEestadoHabitacion(EestadoHabitacion.RESERVADA);
+                return estadiaBuscada;
+            }
+        }
+        habitacionDeLaEstadia.setEestadoHabitacion(EestadoHabitacion.DISPONIBLE);
+        estadias.remove(estadiaBuscada.getId());
+        estadiaBuscada.setFechaCheckOutReal(LocalDate.now());
+        return estadiaBuscada;
     }
 
     //Yo diria que aca hay que implementar funcionalidad que esta en Recpcionista
@@ -97,19 +135,19 @@ public class Hotel {
         this.habitaciones = habitaciones;
     }
 
-    public HashSet<Reserva> getReservas() {
+    public Map<Integer,Reserva> getReservas() {
         return reservas;
     }
 
-    public void setReservas(HashSet<Reserva> reservas) {
+    public void setReservas(Map<Integer,Reserva> reservas) {
         this.reservas = reservas;
     }
 
-    public List<Estadia> getEstadias() {
+    public Map<Integer,Estadia> getEstadias() {
         return estadias;
     }
 
-    public void setEstadias(List<Estadia> estadias) {
+    public void setEstadias(Map<Integer,Estadia> estadias) {
         this.estadias = estadias;
     }
 
@@ -126,20 +164,10 @@ public class Hotel {
     }
 
     public Reserva buscarReservaPorId(int reservaId) {
-        for (Reserva reserva : reservas) {
-            if (reserva.getId() == reservaId) {
-                return reserva;
-            }
-        }
-        return null;
+        return reservas.get(reservaId);
     }
 
     public Estadia buscarEstadiaPorId(int estadiaId) {
-        for (Estadia estadia : estadias) {
-            if (estadia.getId() == estadiaId) {
-                return estadia;
-            }
-        }
-        return null;
+        return estadias.get(estadiaId);
     }
 }
