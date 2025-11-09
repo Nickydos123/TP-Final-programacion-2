@@ -2,11 +2,14 @@ package modelo;
 import interfaces.IMuestraHabitaciones;
 import interfaces.IRegistraReservas;
 import interfaces.IHacerCheckInyCheckOut;
-import enums.EestadoHabitacion;
 import java.time.LocalDate;
 
 
-public class Recepcionista implements IMuestraHabitaciones, IRegistraReservas, IHacerCheckInyCheckOut{
+public class Recepcionista extends Usuario implements IMuestraHabitaciones, IRegistraReservas, IHacerCheckInyCheckOut{
+    public Recepcionista(String nombre, String apellido, String dni, String domicilio, String userName, String password) {
+        super(nombre, apellido, dni, domicilio, userName, password);
+    }
+
     @Override
     public String mostrarHabitaciones(Hotel hotel) {
         StringBuilder sb = new StringBuilder();

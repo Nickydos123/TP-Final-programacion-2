@@ -11,7 +11,7 @@ public class Hotel {
     private Map<Integer, Habitacion> habitaciones;
     private Map<Integer,Reserva> reservas;
     private Map<Integer,Estadia> estadias;
-    private Map<String,Usuario> usuarios;
+    //Usuarios no deberian estar en hotel, sino en Sistema
 
     private boolean seSolapanLasFechas(LocalDate desde1, LocalDate hasta1, LocalDate desde2, LocalDate hasta2){
         if (desde1 == null || hasta1 == null || desde2 == null || hasta2 == null){
@@ -125,8 +125,6 @@ public class Hotel {
         return estadiaBuscada;
     }
 
-    //Yo diria que aca hay que implementar funcionalidad que esta en Recpcionista
-
     public Map<Integer, Habitacion> getHabitaciones() {
         return habitaciones;
     }
@@ -151,23 +149,4 @@ public class Hotel {
         this.estadias = estadias;
     }
 
-    public Map<String, Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(Map<String, Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public Habitacion buscarHabitacionPorId(int habitacionId) {
-        return habitaciones.get(habitacionId);
-    }
-
-    public Reserva buscarReservaPorId(int reservaId) {
-        return reservas.get(reservaId);
-    }
-
-    public Estadia buscarEstadiaPorId(int estadiaId) {
-        return estadias.get(estadiaId);
-    }
 }
