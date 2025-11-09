@@ -1,21 +1,19 @@
 package modelo;
 
-import exceptions.ExceptionTipoNoValido;
-import exceptions.ExceptionUserNameRepetido;
-import exceptions.ExceptionUsuarioNoEncontrado;
+import exceptions.*;
+import interfaces.IAgrega_Quita_Habitaciones;
 import interfaces.IHaceBackUps;
 import interfaces.IManejaUsuarios;
 
-public class Administrador extends Usuario implements IManejaUsuarios, IHaceBackUps{
-    //Puede que el Administrador y la recepcionista deban tener al sistema como un parametro
+public class Administrador extends Usuario implements IManejaUsuarios, IHaceBackUps, IAgrega_Quita_Habitaciones {
     //El administrador tambien deberia poder agregar y quitar habitaciones del hotel
 
-    public Administrador(String nombre, String apellido, String dni, String domicilio, String userName, String password) {
-        super(nombre, apellido, dni, domicilio, userName, password);
+    public Administrador(String nombre, String apellido, String dni, String domicilio, String userName, String password, Sistema sistema) {
+        super(nombre, apellido, dni, domicilio, userName, password, sistema);
     }
 
     @Override
-    public void addUsuario(Usuario usuario, Sistema sistema) throws ExceptionUserNameRepetido {
+    public void addUsuario(Usuario usuario) throws ExceptionUserNameRepetido {
         if (sistema.getUsuarios().containsKey(usuario.getUserName())){
             throw new ExceptionUserNameRepetido();
         }
@@ -23,7 +21,7 @@ public class Administrador extends Usuario implements IManejaUsuarios, IHaceBack
     }
 
     @Override
-    public void removeUsuario(String userName, Sistema sistema) throws ExceptionUsuarioNoEncontrado {
+    public void removeUsuario(String userName) throws ExceptionUsuarioNoEncontrado {
         if (!sistema.getUsuarios().containsKey(userName)){
             throw new ExceptionUsuarioNoEncontrado();
         }
@@ -31,7 +29,23 @@ public class Administrador extends Usuario implements IManejaUsuarios, IHaceBack
     }
 
     @Override
-    public void asignarTipo(String userName, String tipo, Sistema sistema) throws ExceptionUsuarioNoEncontrado, ExceptionTipoNoValido {
+    public void addHabitacion(Habitacion habitacion) throws ExceptionIdRepetido {
+        if(sistema.getHotel().getHabitaciones().containsKey(habitacion.getId())){
+            throw new ExceptionIdRepetido("El id de la habitacion ya se encuntra en uso");
+        }
+        sistema.getHotel().getHabitaciones().put(habitacion.getId(),habitacion);
+    }
+
+    @Override
+    public void removeHabitacion(int id) throws ExceptionIdNoencontrado {
+        if(!sistema.getHotel().getHabitaciones().containsKey(id)){
+            throw new ExceptionIdNoencontrado("No se encontro una habitacion con el id proporcionado");
+        }
+        sistema.getHotel().getHabitaciones().remove(id);
+    }
+
+    @Override
+    public void asignarTipo(String userName, String tipo) throws ExceptionUsuarioNoEncontrado, ExceptionTipoNoValido {
         if (!sistema.getUsuarios().containsKey(userName)){
             throw new ExceptionUsuarioNoEncontrado();
         }
@@ -39,14 +53,14 @@ public class Administrador extends Usuario implements IManejaUsuarios, IHaceBack
 
         Usuario nuevoUsuario = null;
         if(tipo.equalsIgnoreCase("administrador")){
-            nuevoUsuario = new Administrador(usuarioAAsignar.getNombre(),usuarioAAsignar.getApellido(),usuarioAAsignar.getDni(),usuarioAAsignar.getDomicilio(),usuarioAAsignar.getUserName(),usuarioAAsignar.getPassword());
+            nuevoUsuario = new Administrador(usuarioAAsignar.getNombre(),usuarioAAsignar.getApellido(),usuarioAAsignar.getDni(),usuarioAAsignar.getDomicilio(),usuarioAAsignar.getUserName(),usuarioAAsignar.getPassword(),usuarioAAsignar.getSistema());
         } else if (tipo.equalsIgnoreCase("recepcionista")) {
-            nuevoUsuario = new Recepcionista(usuarioAAsignar.getNombre(),usuarioAAsignar.getApellido(),usuarioAAsignar.getDni(),usuarioAAsignar.getDomicilio(),usuarioAAsignar.getUserName(),usuarioAAsignar.getPassword());
+            nuevoUsuario = new Recepcionista(usuarioAAsignar.getNombre(),usuarioAAsignar.getApellido(),usuarioAAsignar.getDni(),usuarioAAsignar.getDomicilio(),usuarioAAsignar.getUserName(),usuarioAAsignar.getPassword(),usuarioAAsignar.getSistema());
         }else {
             throw new ExceptionTipoNoValido();
         }
 
-        sistema.getUsuarios().remove(userName); //Elimino al usuario anterior que era generico
+        sistema.getUsuarios().remove(userName); //Elimino al usuario anterior que no tenia tipo
         sistema.getUsuarios().put(nuevoUsuario.getUserName(),nuevoUsuario);//Lo reemplazo por el nuevo usuario asignado
     }
 

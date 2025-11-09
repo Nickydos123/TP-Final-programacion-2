@@ -1,13 +1,13 @@
 package modelo;
-import interfaces.IMuestraHabitaciones;
+import interfaces.IMuestraDatoHotel;
 import interfaces.IRegistraReservas;
 import interfaces.IHacerCheckInyCheckOut;
 import java.time.LocalDate;
 
 
-public class Recepcionista extends Usuario implements IMuestraHabitaciones, IRegistraReservas, IHacerCheckInyCheckOut{
-    public Recepcionista(String nombre, String apellido, String dni, String domicilio, String userName, String password) {
-        super(nombre, apellido, dni, domicilio, userName, password);
+public class Recepcionista extends Usuario implements IMuestraDatoHotel, IRegistraReservas, IHacerCheckInyCheckOut{
+    public Recepcionista(String nombre, String apellido, String dni, String domicilio, String userName, String password, Sistema sistema) {
+        super(nombre, apellido, dni, domicilio, userName, password, sistema);
     }
 
     @Override
@@ -15,6 +15,24 @@ public class Recepcionista extends Usuario implements IMuestraHabitaciones, IReg
         StringBuilder sb = new StringBuilder();
         for(Habitacion habitacion : hotel.getHabitaciones().values()){
             sb.append(habitacion.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String mostrarReservas(Hotel hotel) {
+        StringBuilder sb = new StringBuilder();
+        for(Reserva reserva : hotel.getReservas().values()){
+            sb.append(reserva.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String mostrarEstadias(Hotel hotel) {
+        StringBuilder sb = new StringBuilder();
+        for(Estadia estadia : hotel.getEstadias().values()){
+            sb.append(estadia.toString()).append("\n");
         }
         return sb.toString();
     }

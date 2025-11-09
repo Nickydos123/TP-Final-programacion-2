@@ -7,7 +7,7 @@ import modelo.Sistema;
 import modelo.Usuario;
 
 public interface IManejaUsuarios {
-    void addUsuario(Usuario usuario, Sistema sistema) throws ExceptionUserNameRepetido;
-    void removeUsuario(String userName, Sistema sistema) throws ExceptionUsuarioNoEncontrado;
-    void asignarTipo(String userName,String tipo, Sistema sistema) throws ExceptionUsuarioNoEncontrado, ExceptionTipoNoValido;
+    void addUsuario(Usuario usuario) throws ExceptionUserNameRepetido;
+    void removeUsuario(String userName) throws ExceptionUsuarioNoEncontrado;
+    void asignarTipo(String userName,String tipo) throws ExceptionUsuarioNoEncontrado, ExceptionTipoNoValido;
 }

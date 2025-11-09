@@ -5,6 +5,7 @@ import exceptions.ExceptionEstadoIlegal;
 import exceptions.ExceptionReservaConflicto;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Hotel {
@@ -12,6 +13,13 @@ public class Hotel {
     private Map<Integer,Reserva> reservas;
     private Map<Integer,Estadia> estadias;
     //Usuarios no deberian estar en hotel, sino en Sistema
+
+
+    public Hotel() {
+        this.habitaciones = new HashMap<>();
+        this.reservas = new HashMap<>();
+        this.estadias = new HashMap<>();
+    }
 
     private boolean seSolapanLasFechas(LocalDate desde1, LocalDate hasta1, LocalDate desde2, LocalDate hasta2){
         if (desde1 == null || hasta1 == null || desde2 == null || hasta2 == null){
@@ -23,7 +31,7 @@ public class Hotel {
 
     private void puedeReservarHabitacion(int habitacionId, LocalDate desde, LocalDate hasta) throws ExceptionReservaConflicto {
         if (desde == null || hasta == null || !desde.isBefore(hasta)) {
-            throw new ExceptionReservaConflicto("Fechas inválidas: 'desde' debe ser antes de 'hasta'.");
+            throw new ExceptionReservaConflicto("Fechas inválidas. 'desde' debe ser antes de 'hasta'.");
         }
 
         Habitacion habitacion = habitaciones.get(habitacionId);
@@ -82,7 +90,7 @@ public class Hotel {
             throw new ExceptionEstadoIlegal("La habitación no está en estado RESERVADA.");
         }
 
-        Estadia nuevaEstadia = new Estadia(habitacionDeLaReserva.getId(), reservaBuscada.getDesde(), reservaBuscada.getHasta());
+        Estadia nuevaEstadia = new Estadia(habitacionDeLaReserva.getId(),reservaBuscada.getPasajeroDni() ,reservaBuscada.getDesde(), reservaBuscada.getHasta());
         estadias.put(nuevaEstadia.getId(), nuevaEstadia);
         reservas.remove(reservaBuscada.getId());
 
@@ -109,9 +117,12 @@ public class Hotel {
             throw  new ExceptionEstadoIlegal("No se encontro la habitacion asociada a la estadia");
         }
 
-        if (habitacionDeLaEstadia.getEestadoHabitacion() != EestadoHabitacion.OCUPADA) {
+        if (habitacionDeLaEstadia.getEestadoHabitacion() != EestadoHabitacion.OCUPADA && habitacionDeLaEstadia.getEestadoHabitacion() != EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO) {
             throw new ExceptionEstadoIlegal("La habitacion no esta en estado OCUPADA.");//Por si la habitacion no esta ocupada
         }
+
+        estadiaBuscada.setFechaCheckOutReal(LocalDate.now());
+        estadias.remove(estadiaBuscada.getId());
 
         for (Reserva reserva : reservas.values()){
             if (reserva.getIdHabitacion() == habitacionDeLaEstadia.getId()){
@@ -120,8 +131,6 @@ public class Hotel {
             }
         }
         habitacionDeLaEstadia.setEestadoHabitacion(EestadoHabitacion.DISPONIBLE);
-        estadias.remove(estadiaBuscada.getId());
-        estadiaBuscada.setFechaCheckOutReal(LocalDate.now());
         return estadiaBuscada;
     }
 

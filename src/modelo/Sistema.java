@@ -7,16 +7,13 @@ import java.util.Map;
 
 public class Sistema {
     private Hotel hotel;
-    private Administrador mainAdmin;//Este administrador esta para poder manejar el Sistema desde un comiezo(Puede ser inecesario)
     private Map<String,Usuario> usuarios;
     private Usuario currentUser;
 
-    public Sistema(Hotel hotel, Administrador mainAdmin) {
+    public Sistema(Hotel hotel) {
         this.hotel = hotel;
-        this.mainAdmin = mainAdmin;
-        this.usuarios = new HashMap<String,Usuario>();
+        this.usuarios = new HashMap<>();
         this.currentUser = null;
-        usuarios.put(mainAdmin.getUserName(), mainAdmin);
     }
 
     public void login(String userName, String password) throws ExceptionUsuarioNoAutorizado {
@@ -59,14 +56,6 @@ public class Sistema {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
-    }
-
-    public Administrador getMainAdmin() {
-        return mainAdmin;
-    }
-
-    public void setMainAdmin(Administrador mainAdmin) {
-        this.mainAdmin = mainAdmin;
     }
 
     public Usuario getCurrentUser() {

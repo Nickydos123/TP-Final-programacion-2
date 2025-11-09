@@ -1,6 +1,11 @@
 package modelo;
 
+import enums.EestadoHabitacion;
+import enums.EtipoHabitacion;
+import org.json.JSONObject;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Reserva {
@@ -18,6 +23,34 @@ public class Reserva {
         this.pasajeroDni = pasajeroDni;
         this.desde = desde;
         this.hasta = hasta;
+    }
+
+    public Reserva(int id, int idHabitacion, String pasajeroDni, LocalDate desde, LocalDate hasta) {
+        this.id = id;
+        this.idHabitacion = idHabitacion;
+        this.pasajeroDni = pasajeroDni;
+        this.desde = desde;
+        this.hasta = hasta;
+    }
+
+    public static JSONObject toJson(Reserva r){
+        JSONObject obj = new JSONObject();
+        obj.put("id",r.getId());
+        obj.put("idHabitacion",r.getIdHabitacion());
+        obj.put("pasajeroDni",r.getPasajeroDni());
+        obj.put("desde",r.getDesde().toString());//Guardo la fechas como strings YYYY-MM-DD
+        obj.put("hasta",r.getHasta().toString());
+        return obj;
+    }
+
+    public static Reserva fromJson(JSONObject obj){
+        int id = obj.getInt("id");
+        int idHabitacion = obj.getInt("idHabitacion");
+        String pasajeroDni = obj.getString("pasajeroDni");
+        LocalDate desde = LocalDate.parse(obj.getString("desde"));//Los transformo de nuevo a Date desde String con el metodo estatico
+        LocalDate hasta = LocalDate.parse(obj.getString("hasta"));
+
+        return new Reserva(id,idHabitacion,pasajeroDni,desde,hasta);
     }
 
     @Override

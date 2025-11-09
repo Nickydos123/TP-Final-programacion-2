@@ -3,6 +3,7 @@ package modelo;
 import enums.EestadoHabitacion;
 import enums.EtipoHabitacion;
 import jdk.dynalink.beans.StaticClass;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -21,6 +22,22 @@ public class Habitacion {
         this.tipoHabitacion = tipoHabitacion;
         this.precio = precio;
         this.eestadoHabitacion = eestadoHabitacion;
+    }
+
+    public static JSONObject toJson(Habitacion h){
+        JSONObject obj = new JSONObject();
+        obj.put("tipoHabitacion",h.getTipoHabitacion());
+        obj.put("precio",h.getPrecio());
+        obj.put("eestadoHabitacion",h.getEestadoHabitacion());
+        return obj;
+    }
+
+    public static Habitacion fromJson(JSONObject obj){
+        EtipoHabitacion etipoHabitacion = obj.getEnum(EtipoHabitacion.class,"tipoHabitacion");
+        double precio = obj.getDouble("precio");
+        EestadoHabitacion eestadoHabitacion1 = obj.getEnum(EestadoHabitacion.class,"eestadoHabitacion");
+
+        return new Habitacion(etipoHabitacion,precio,eestadoHabitacion1);
     }
 
     public int getId() {
