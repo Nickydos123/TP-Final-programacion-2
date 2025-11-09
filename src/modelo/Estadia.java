@@ -22,7 +22,7 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
         this.pasajeroDni = pasajeroDni;
         this.fechaCheckIn = fechaCheckIn;
         this.fechaCheckOut = fechaCheckOut;
-        this.fechaCheckOutReal = null;
+        this.fechaCheckOutReal = LocalDate.of(1,1,1);//Valor default porque dejar esto en null es problematico
     }
 
     public Estadia(int id, int idHabitacion,String pasajeroDni ,LocalDate fechaCheckIn, LocalDate fechaCheckOut, LocalDate fechaCheckOutReal) {
@@ -44,7 +44,13 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
         obj.put("pasajeroDni",this.getPasajeroDni());
         obj.put("fechaCheckIn",this.getFechaCheckIn().toString());//Guardo la fechas como strings YYYY-MM-DD
         obj.put("fechaCheckOut",this.getFechaCheckIn().toString());
-        obj.put("fechaCheckOutReal",this.getFechaCheckOutReal().toString());
+
+        if(this.fechaCheckOutReal.isEqual(LocalDate.of(1,1,1))){//Solucion para los problemas que me daba una fecha null
+            obj.put("fechaCheckOutReal","CheckOut Pendiente");
+        }else {
+            obj.put("fechaCheckOutReal",this.getFechaCheckOutReal().toString());
+        }
+
         return obj;
     }
 
@@ -54,8 +60,13 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
         String pasajeroDni = obj.getString("pasajeroDni");
         LocalDate fechaCheckIn = LocalDate.parse(obj.getString("fechaCheckIn"));//Los transformo de nuevo a Date desde String con el metodo estatico
         LocalDate fechaCheckOut = LocalDate.parse(obj.getString("fechaCheckOut"));
-        LocalDate fechaCheckOutReal = LocalDate.parse(obj.getString("fechaCheckOutReal"));
 
+        LocalDate fechaCheckOutReal;
+        if(obj.getString("fechaCheckOutReal").equals("CheckOut Pendiente")){
+            fechaCheckOutReal = LocalDate.of(1,1,1);
+        }else {
+            fechaCheckOutReal = LocalDate.parse(obj.getString("fechaCheckOutReal"));
+        }
         return new Estadia(id,idHabitacion,pasajeroDni,fechaCheckIn,fechaCheckOut,fechaCheckOutReal);
     }
 
@@ -72,6 +83,16 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
 
     @Override
     public String toString() {
+        if(this.fechaCheckOutReal.isEqual(LocalDate.of(1,1,1))){
+            return "Estadia{" +
+                    "id=" + id +
+                    ", idHabitacion=" + idHabitacion + //Cambiar en caso de que se quiera vincular con una habitacion
+                    ", fechaCheckIn=" + fechaCheckIn +
+                    ", fechaCheckOut=" + fechaCheckOut +
+                    ", fechaCheckOutReal=" + " CheckOut Pendiente" +
+                    '}';
+        }
+        //Adapto el to string para que tenga en cuenta la fechaChekout real sin asignar
         return "Estadia{" +
                 "id=" + id +
                 ", idHabitacion=" + idHabitacion + //Cambiar en caso de que se quiera vincular con una habitacion
@@ -79,6 +100,7 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
                 ", fechaCheckOut=" + fechaCheckOut +
                 ", fechaCheckOutReal=" + fechaCheckOutReal +
                 '}';
+
     }
 
     public int getId() {

@@ -21,6 +21,12 @@ public class Hotel {
         this.estadias = new HashMap<>();
     }
 
+    public Hotel(Map<Integer, Habitacion> habitaciones, Map<Integer, Reserva> reservas, Map<Integer, Estadia> estadias) {
+        this.habitaciones = habitaciones;
+        this.reservas = reservas;
+        this.estadias = estadias;
+    }
+
     private boolean seSolapanLasFechas(LocalDate desde1, LocalDate hasta1, LocalDate desde2, LocalDate hasta2){
         if (desde1 == null || hasta1 == null || desde2 == null || hasta2 == null){
             return false;

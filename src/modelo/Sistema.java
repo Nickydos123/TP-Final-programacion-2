@@ -16,6 +16,12 @@ public class Sistema {
         this.currentUser = null;
     }
 
+    public Sistema() {
+        this.hotel = Backupper.leerHotel();
+        this.usuarios = new HashMap<>();
+        this.currentUser = null;
+    }
+
     public void login(String userName, String password) throws ExceptionUsuarioNoAutorizado {
         if(!usuarios.containsKey(userName)){
             throw new ExceptionUsuarioNoAutorizado("No existe un usuario con ese nombre de usuario");
