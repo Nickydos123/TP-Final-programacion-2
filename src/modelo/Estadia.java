@@ -1,14 +1,15 @@
 package modelo;
 
+import interfaces.ItoJson_fromJson;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Estadia {
+public class Estadia implements ItoJson_fromJson<Estadia> {
     static int cantEstadias = 0;
-    private final int id;
-    private final int idHabitacion;
+    private int id;
+    private int idHabitacion;
     private String pasajeroDni;
     private LocalDate fechaCheckIn;
     private LocalDate fechaCheckOut;
@@ -33,18 +34,21 @@ public class Estadia {
         this.fechaCheckOutReal = fechaCheckOutReal;
     }
 
-    public static JSONObject toJson(Estadia e){
+    public Estadia() {
+    }
+
+    public JSONObject toJson(){
         JSONObject obj = new JSONObject();
-        obj.put("id",e.getId());
-        obj.put("idHabitacion",e.getIdHabitacion());
-        obj.put("pasajeroDni",e.getPasajeroDni());
-        obj.put("fechaCheckIn",e.getFechaCheckIn().toString());//Guardo la fechas como strings YYYY-MM-DD
-        obj.put("fechaCheckOut",e.getFechaCheckIn().toString());
-        obj.put("fechaCheckOutReal",e.getFechaCheckOutReal().toString());
+        obj.put("id",this.getId());
+        obj.put("idHabitacion",this.getIdHabitacion());
+        obj.put("pasajeroDni",this.getPasajeroDni());
+        obj.put("fechaCheckIn",this.getFechaCheckIn().toString());//Guardo la fechas como strings YYYY-MM-DD
+        obj.put("fechaCheckOut",this.getFechaCheckIn().toString());
+        obj.put("fechaCheckOutReal",this.getFechaCheckOutReal().toString());
         return obj;
     }
 
-    public static Estadia fromJson(JSONObject obj){
+    public Estadia fromJson(JSONObject obj){
         int id = obj.getInt("id");
         int idHabitacion = obj.getInt("idHabitacion");
         String pasajeroDni = obj.getString("pasajeroDni");

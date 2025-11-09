@@ -2,6 +2,7 @@ package modelo;
 
 import enums.EestadoHabitacion;
 import enums.EtipoHabitacion;
+import interfaces.ItoJson_fromJson;
 import jdk.dynalink.beans.StaticClass;
 import org.json.JSONObject;
 
@@ -9,7 +10,7 @@ import java.util.Objects;
 
 
 
-public class Habitacion {
+public class Habitacion implements ItoJson_fromJson<Habitacion> {
 
     static int contID = 0;
     private int id;
@@ -24,15 +25,18 @@ public class Habitacion {
         this.eestadoHabitacion = eestadoHabitacion;
     }
 
-    public static JSONObject toJson(Habitacion h){
+    public Habitacion() {
+    }
+
+    public JSONObject toJson(){
         JSONObject obj = new JSONObject();
-        obj.put("tipoHabitacion",h.getTipoHabitacion());
-        obj.put("precio",h.getPrecio());
-        obj.put("eestadoHabitacion",h.getEestadoHabitacion());
+        obj.put("tipoHabitacion",this.getTipoHabitacion());
+        obj.put("precio",this.getPrecio());
+        obj.put("eestadoHabitacion",this.getEestadoHabitacion());
         return obj;
     }
 
-    public static Habitacion fromJson(JSONObject obj){
+    public Habitacion fromJson(JSONObject obj){
         EtipoHabitacion etipoHabitacion = obj.getEnum(EtipoHabitacion.class,"tipoHabitacion");
         double precio = obj.getDouble("precio");
         EestadoHabitacion eestadoHabitacion1 = obj.getEnum(EestadoHabitacion.class,"eestadoHabitacion");
