@@ -71,9 +71,4 @@ public class Habitacion {
                 ", eestadoHabitacion=" + eestadoHabitacion +
                 '}';
     }
-
-    //public boolean estaDisponible(desde,hasta){
-
-    // }
-
 }
