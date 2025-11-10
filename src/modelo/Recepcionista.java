@@ -45,9 +45,9 @@ public class Recepcionista extends Usuario implements IMuestraDatoHotel, IRegist
     }
 
     @Override
-    public Reserva registraReserva(int habitacionId, String dniPasajero, LocalDate desde, LocalDate hasta) {
+    public void registraReserva(Reserva reserva) {
         Hotel hotel = sistema.getHotel();
-        return hotel.crearReserva(habitacionId,dniPasajero,desde,hasta);
+        hotel.crearReserva(reserva.getIdHabitacion(),reserva.getPasajeroDni(),reserva.getDesde(),reserva.getHasta());
     }
     @Override
     public Estadia hacerCheckIn(int reservaId) {
