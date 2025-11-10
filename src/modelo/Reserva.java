@@ -84,6 +84,22 @@ public class Reserva implements ItoJson_fromJson<Reserva> {
         return idHabitacion;
     }
 
+    public static int getCantReservas() {
+        return cantReservas;
+    }
+
+    public static void setCantReservas(int cantReservas) {
+        Reserva.cantReservas = cantReservas;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIdHabitacion(int idHabitacion) {
+        this.idHabitacion = idHabitacion;
+    }
+
     public String getPasajeroDni() {
         return pasajeroDni;
     }
