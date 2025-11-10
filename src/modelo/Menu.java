@@ -108,7 +108,7 @@ public class Menu {
             switch (opcion) {
                 case "1":
                     System.out.println("Usuarios registrados en el Sistema:");
-                    currentAdmin.mostrarUsuarios();
+                    System.out.println(currentAdmin.mostrarUsuarios());
                     break;
                 case "2":
                     Usuario usuarioAAgregar = new Usuario();
