@@ -2,6 +2,7 @@ package modelo;
 
 import enums.EestadoHabitacion;
 import exceptions.ExceptionEstadoIlegal;
+import exceptions.ExceptionIdNoencontrado;
 import exceptions.ExceptionReservaConflicto;
 
 import java.time.LocalDate;
@@ -76,11 +77,11 @@ public class Hotel {
         return nuevaReserva;
     }
 
-    public Estadia checkIn(int reservaId) throws ExceptionEstadoIlegal {
+    public Estadia checkIn(int reservaId) throws ExceptionEstadoIlegal, ExceptionIdNoencontrado {
         Reserva reservaBuscada = reservas.get(reservaId);
 
         if (reservaBuscada == null) {
-            throw new ExceptionEstadoIlegal("No se encontro la reserva con el ID proporcionado.");//Por si no se encontro la reserva
+            throw new ExceptionIdNoencontrado("No se encontro la reserva con el ID proporcionado.");//Por si no se encontro la reserva
         }
 
         Habitacion habitacionDeLaReserva = habitaciones.get(reservaBuscada.getIdHabitacion());
@@ -97,11 +98,11 @@ public class Hotel {
         return nuevaEstadia;
     }
 
-    public Estadia checkOut(int estadiaId) throws ExceptionEstadoIlegal {
+    public Estadia checkOut(int estadiaId) throws ExceptionEstadoIlegal,ExceptionIdNoencontrado {
         Estadia estadiaBuscada = estadias.get(estadiaId);
 
         if (estadiaBuscada == null) {
-            throw new ExceptionEstadoIlegal("No se encontro la estadia con el ID proporcionado.");//Por si no se encontro la estadia
+            throw new ExceptionIdNoencontrado("No se encontro la estadia con el ID proporcionado.");//Por si no se encontro la estadia
         }
 
         Habitacion habitacionDeLaEstadia = habitaciones.get(estadiaBuscada.getIdHabitacion());
