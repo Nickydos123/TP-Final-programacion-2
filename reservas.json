@@ -1,0 +1,16 @@
+[
+    {
+        "hasta": "2002-12-25",
+        "pasajeroDni": "254234534",
+        "desde": "2002-12-20",
+        "id": 2,
+        "idHabitacion": 1
+    },
+    {
+        "hasta": "2002-12-25",
+        "pasajeroDni": "456745646",
+        "desde": "2002-12-17",
+        "id": 3,
+        "idHabitacion": 2
+    }
+]

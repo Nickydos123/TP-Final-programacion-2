@@ -10,8 +10,16 @@ public class Sistema {
     private Map<String,Usuario> usuarios;
     private Usuario currentUser;
 
-    public Sistema(Hotel hotel) {
+    //Esto sirve para inciar el programa cuando no hay archivos para leer
+    public Sistema(Hotel hotel, Administrador admin) {
         this.hotel = hotel;
+        this.usuarios = new HashMap<>();
+        this.usuarios.put(admin.getUserName(),admin);
+        this.currentUser = null;
+    }
+    //Este me sirve para inicializar cuando no tengo usuarios
+    public Sistema() {
+        this.hotel = Backupper.leerHotel();
         this.usuarios = new HashMap<>();
         this.currentUser = null;
     }
