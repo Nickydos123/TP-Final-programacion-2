@@ -73,15 +73,7 @@ public class Hotel {
         Reserva nuevaReserva = new Reserva(habitacionId, pasajeroDni, desde, hasta);//Crea la nueva reserva
         reservas.put(nuevaReserva.getId(),nuevaReserva);
 
-        Habitacion habitacion = habitaciones.get(habitacionId);
-        if(habitacion.getEestadoHabitacion() == EestadoHabitacion.OCUPADA){
-            habitacion.setEestadoHabitacion(EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO);
-        }else{
-            habitacion.setEestadoHabitacion(EestadoHabitacion.RESERVADA);
-        }
-
         return nuevaReserva;
-        //Cambia el estado de la habitacion a el estado pertinente
     }
 
     public Estadia checkIn(int reservaId) throws ExceptionEstadoIlegal {
@@ -92,21 +84,15 @@ public class Hotel {
         }
 
         Habitacion habitacionDeLaReserva = habitaciones.get(reservaBuscada.getIdHabitacion());
-        if (habitacionDeLaReserva.getEestadoHabitacion() != EestadoHabitacion.RESERVADA && habitacionDeLaReserva.getEestadoHabitacion() != EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO) {
-            throw new ExceptionEstadoIlegal("La habitación no está en estado RESERVADA.");
+        if (habitacionDeLaReserva.getEestadoHabitacion() != EestadoHabitacion.DISPONIBLE) {
+            throw new ExceptionEstadoIlegal("La habitación no está en estado DISPONIBLE.");
         }
 
         Estadia nuevaEstadia = new Estadia(habitacionDeLaReserva.getId(),reservaBuscada.getPasajeroDni() ,reservaBuscada.getDesde(), reservaBuscada.getHasta());
         estadias.put(nuevaEstadia.getId(), nuevaEstadia);
         reservas.remove(reservaBuscada.getId());
 
-        //Cambio el estado de la habitacion al estado adecuado
-        for (Reserva reserva : reservas.values()){
-            if(reserva.getIdHabitacion() == habitacionDeLaReserva.getId()){
-                habitacionDeLaReserva.setEestadoHabitacion(EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO);
-                return nuevaEstadia;
-            }
-        }
+
         habitacionDeLaReserva.setEestadoHabitacion(EestadoHabitacion.OCUPADA);
         return nuevaEstadia;
     }
@@ -123,19 +109,13 @@ public class Hotel {
             throw  new ExceptionEstadoIlegal("No se encontro la habitacion asociada a la estadia");
         }
 
-        if (habitacionDeLaEstadia.getEestadoHabitacion() != EestadoHabitacion.OCUPADA && habitacionDeLaEstadia.getEestadoHabitacion() != EestadoHabitacion.OCUPADA_Y_RESERVADA_A_FUTURO) {
+        if (habitacionDeLaEstadia.getEestadoHabitacion() != EestadoHabitacion.OCUPADA) {
             throw new ExceptionEstadoIlegal("La habitacion no esta en estado OCUPADA.");//Por si la habitacion no esta ocupada
         }
 
         estadiaBuscada.setFechaCheckOutReal(LocalDate.now());
         estadias.remove(estadiaBuscada.getId());
 
-        for (Reserva reserva : reservas.values()){
-            if (reserva.getIdHabitacion() == habitacionDeLaEstadia.getId()){
-                habitacionDeLaEstadia.setEestadoHabitacion(EestadoHabitacion.RESERVADA);
-                return estadiaBuscada;
-            }
-        }
         habitacionDeLaEstadia.setEestadoHabitacion(EestadoHabitacion.DISPONIBLE);
         return estadiaBuscada;
     }
