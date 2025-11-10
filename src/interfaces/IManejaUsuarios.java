@@ -10,4 +10,5 @@ public interface IManejaUsuarios {
     void addUsuario(Usuario usuario) throws ExceptionUserNameRepetido;
     void removeUsuario(String userName) throws ExceptionUsuarioNoEncontrado;
     void asignarTipo(String userName,String tipo) throws ExceptionUsuarioNoEncontrado, ExceptionTipoNoValido;
+    String mostrarUsuarios();
 }

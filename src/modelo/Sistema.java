@@ -41,13 +41,17 @@ public class Sistema {
         currentUser = null;
     }
 
-    //Estas dos se encaragn de averiguar de que tipo es mi currentUser
+    //Estos se encargan de averiguar de que tipo es mi currentUser
     public boolean isAdminLoggedIn() {
         return currentUser instanceof Administrador;
     }
 
     public boolean isRecepcionistaLoggedIn() {
         return currentUser instanceof Recepcionista;
+    }
+
+    public boolean isUserLoggedIn() {
+        return currentUser.getClass() == Usuario.class;
     }
 
     public Map<String, Usuario> getUsuarios() {

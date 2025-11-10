@@ -5,5 +5,5 @@ import modelo.Hotel;
 import java.time.LocalDate;
 
 public interface IRegistraReservas {
-    Reserva registraReserva(Hotel hotel, int habitacionId, String dniPasajero, LocalDate desde, LocalDate hasta);
+    Reserva registraReserva(int habitacionId, String dniPasajero, LocalDate desde, LocalDate hasta);
 }

@@ -72,5 +72,14 @@ public class Administrador extends Usuario implements IManejaUsuarios, IHaceBack
     public void BackupUsuarios(){
         SistemBackupper.backupUserMap(sistema.getUsuarios(),"Usuarios.json");
     }
+
+    @Override
+    public String mostrarUsuarios() {
+        StringBuilder sb = new StringBuilder();
+        for(Usuario usuario : sistema.getUsuarios().values()){
+            sb.append(usuario.toString()).append("\n");
+        }
+        return sb.toString();
+    }
 }
 

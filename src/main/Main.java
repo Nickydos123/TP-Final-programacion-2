@@ -1,10 +1,6 @@
 package main;
-
-import enums.EestadoHabitacion;
-import enums.EtipoHabitacion;
 import modelo.*;
 
-import java.time.LocalDate;
 
 public class Main {
     static void main() {
