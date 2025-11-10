@@ -25,11 +25,19 @@ public class Habitacion implements ItoJson_fromJson<Habitacion> {
         this.eestadoHabitacion = eestadoHabitacion;
     }
 
+    public Habitacion(int id, EtipoHabitacion tipoHabitacion, double precio, EestadoHabitacion eestadoHabitacion) {
+        this.id = id;
+        this.tipoHabitacion = tipoHabitacion;
+        this.precio = precio;
+        this.eestadoHabitacion = eestadoHabitacion;
+    }
+
     public Habitacion() {
     }
 
     public JSONObject toJson(){
         JSONObject obj = new JSONObject();
+        obj.put("id",this.getId());
         obj.put("tipoHabitacion",this.getTipoHabitacion());
         obj.put("precio",this.getPrecio());
         obj.put("eestadoHabitacion",this.getEestadoHabitacion());
@@ -37,11 +45,12 @@ public class Habitacion implements ItoJson_fromJson<Habitacion> {
     }
 
     public Habitacion fromJson(JSONObject obj){
+        int id = obj.getInt("id");
         EtipoHabitacion etipoHabitacion = obj.getEnum(EtipoHabitacion.class,"tipoHabitacion");
         double precio = obj.getDouble("precio");
         EestadoHabitacion eestadoHabitacion1 = obj.getEnum(EestadoHabitacion.class,"eestadoHabitacion");
 
-        return new Habitacion(etipoHabitacion,precio,eestadoHabitacion1);
+        return new Habitacion(id,etipoHabitacion,precio,eestadoHabitacion1);
     }
 
     public int getId() {
