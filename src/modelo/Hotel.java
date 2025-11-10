@@ -69,12 +69,10 @@ public class Hotel {
         //Logica para tener en cuenta que una habitacion deberia poder reservarse despues de que deje de estar ocupada
     }
 
-    public Reserva crearReserva(int habitacionId, String pasajeroDni, LocalDate desde, LocalDate hasta){
+    public void crearReserva(int habitacionId, String pasajeroDni, LocalDate desde, LocalDate hasta){
         puedeReservarHabitacion(habitacionId, desde, hasta); //Si la habitacion no se puede reservar, lanza una excepcion y termina el codigo.
         Reserva nuevaReserva = new Reserva(habitacionId, pasajeroDni, desde, hasta);//Crea la nueva reserva
         reservas.put(nuevaReserva.getId(),nuevaReserva);
-
-        return nuevaReserva;
     }
 
     public Estadia checkIn(int reservaId) throws ExceptionEstadoIlegal, ExceptionIdNoencontrado {

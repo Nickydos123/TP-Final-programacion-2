@@ -1,8 +1,10 @@
 package modelo;
 
+import enums.EtipoHabitacion;
 import exceptions.*;
 import org.json.JSONException;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -34,7 +36,7 @@ public class Menu {
         System.out.println();
         System.out.println("Ingrese su Nombre de Usuario:");
         String userName = entrada.nextLine();
-        System.out.println("Ingrese su Contrasenia:");
+        System.out.println("Ingrese su Contraseña:");
         String password = entrada.nextLine();
 
         try {
@@ -108,25 +110,27 @@ public class Menu {
                     currentAdmin.mostrarUsuarios();
                     break;
                 case "2":
+                    Usuario usuarioAAgregar = new Usuario();
                     System.out.println("Ingrese los datos del usuario que desea agregar");
                     System.out.println("Ingrese el nombre del usuario");
-                    String nombre = entrada.nextLine();
+                    usuarioAAgregar.setNombre(entrada.nextLine());
                     System.out.println("Ingrese el apellido de usuario");
-                    String apellido = entrada.nextLine();
+                    usuarioAAgregar.setApellido(entrada.nextLine());
                     System.out.println("Ingrese el domicilio del usuario");
-                    String domicilio = entrada.nextLine();
+                    usuarioAAgregar.setDomicilio(entrada.nextLine());
                     System.out.println("Ingrese le DNI del usuario");
-                    String dni = entrada.nextLine();
+                    usuarioAAgregar.setDni(entrada.nextLine());
                     System.out.println("Ingrese el Nombre de Usuario del usuario");
-                    String userName = entrada.nextLine();
+                    usuarioAAgregar.setUserName(entrada.nextLine());
                     System.out.println("Ingrese la contraseña del usuario");
-                    String password = entrada.nextLine();
+                    usuarioAAgregar.setPassword(entrada.nextLine());
 
                     try {
-                        currentAdmin.addUsuario(new Usuario(nombre,apellido,dni,domicilio,userName,password,sistema));
+                        currentAdmin.addUsuario(usuarioAAgregar);
                     }catch (ExceptionUserNameRepetido e){
                         System.out.println(e.getMessage());
                     }
+                    System.out.println("Usuario agregado con exito.");
                     break;
                 case "3":
                     System.out.println("Ingrese el Nombre de usuario del Usuario que desea eliminar");
@@ -145,18 +149,44 @@ public class Menu {
                     String tipo = entrada.nextLine();
                     try {
                         currentAdmin.asignarTipo(userNameAasignarPermisos,tipo);
-                    }catch (ExceptionTipoNoValido e){
-
-                    }catch (ExceptionUsuarioNoEncontrado e1){
-
+                    }catch (ExceptionTipoNoValido | ExceptionUsuarioNoEncontrado e){
+                        System.out.println(e.getMessage());
                     }
-
                     break;
                 case "5":
-                    System.out.println("");
+                    Habitacion habitacionAAgregar = new Habitacion();
+                    System.out.println("Ingrese el tipo de la habitacion a agregar (SIMPLE, DOBLE, SUITE):");
+                    String tipoHabitacion = entrada.nextLine();
+                    try {
+                        habitacionAAgregar.setTipoHabitacion(EtipoHabitacion.valueOf(tipoHabitacion.toUpperCase()));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Tipo de habitacion no valido. Usar: SIMPLE, DOBLE o SUITE");
+                        break;
+                    }
+                    System.out.println("Ingrese el precio de la habitacion:");
+                    try {
+                        double precioHabitacion = entrada.nextDouble();
+                        habitacionAAgregar.setPrecio(precioHabitacion);
+                        entrada.nextLine();
+                    } catch (InputMismatchException e) {
+                        System.out.println("Precio no valido. Ingrese un numero.");
+                    }
+
+
+                    currentAdmin.addHabitacion(habitacionAAgregar);
+                    System.out.println("Habitacion agregada con exito.");
                     break;
                 case "6":
-                    System.out.println("");
+                    System.out.println("Ingrese el ID de la habitacion que desea eliminar:");
+                    try {
+                        int idHabitacionAEliminar = entrada.nextInt();
+                        currentAdmin.removeHabitacion(idHabitacionAEliminar);
+                    } catch (NumberFormatException e) {
+                        System.out.println("ID no valido. Ingrese un numero.");
+                    } catch (ExceptionIdNoencontrado e) {
+                        System.out.println(e.getMessage());
+                    }
+                    entrada.nextLine();
                     break;
                 case "9":
                     try {
@@ -221,18 +251,12 @@ public class Menu {
         while (!salir) {
             System.out.println();
             System.out.println("=== Menu Usuario ===");
-            System.out.println("");
+            System.out.println("Los usuarios nencesitan permisos especiales para acceder a funcionalidades");
             System.out.println("9. Cerrar sesión");
             System.out.println("0. Volver al menú principal");
             System.out.print("> ");
             String opcion = entrada.nextLine().trim();
             switch (opcion) {
-                case "1":
-                    System.out.println("[USUARIO] Ver mis reservas -> integrar llamada a Sistema");
-                    break;
-                case "2":
-                    System.out.println("[USUARIO] Hacer una reserva -> integrar llamada a Sistema");
-                    break;
                 case "9":
                     try {
                         sistema.logout();
