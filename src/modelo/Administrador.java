@@ -65,10 +65,12 @@ public class Administrador extends Usuario implements IManejaUsuarios, IHaceBack
     }
 
     @Override
-    public void realizarBackupHotel() {
+    public void BackupHotel() {
         Backupper.backupHotel(sistema.getHotel());//Realiza un Backup del Hotel al que pertenece
     }
 
-    
+    public void BackupUsuarios(){
+        SistemBackupper.backupUserMap(sistema.getUsuarios(),"Usuarios.json");
+    }
 }
 

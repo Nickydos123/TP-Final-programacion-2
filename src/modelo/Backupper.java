@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //Esta clase generica se ocupa de respaldar lo que tiene que ver con el hotel va ha haber un Backupper diferente para Usuarios
+//Deje en publicos los metodos backupMap y readMap por si llego a implementar logs de algun tipo, pero por ahora podrian ser privados
 public class Backupper<T extends ItoJson_fromJson<T>> {
 
     public Backupper() {

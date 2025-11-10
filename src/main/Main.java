@@ -9,9 +9,7 @@ import java.time.LocalDate;
 public class Main {
     static void main() {
         //Esto son solo pruebas luego aca deberia ir una clase menu
-        Sistema sistema = new Sistema();
-        Administrador startingAdmin = new Administrador("Juan","Adminovich","3344556","Calle 123","admin","admin123",sistema);
-        startingAdmin.addUsuario(startingAdmin);
+        Sistema sistema = SistemBackupper.leerSistema();
 
         sistema.login("admin","admin123");
 
@@ -20,23 +18,19 @@ public class Main {
             System.out.println("Bienvenido Administrador " + sistema.getCurrentUser().getNombre());
             Administrador currentAdmin = (Administrador) sistema.getCurrentUser();
 
-            currentAdmin.addUsuario(new Usuario("Paco","Perez","456456456","Calle345","xXpacoXx","paco123",currentAdmin.getSistema()));
-            currentAdmin.asignarTipo("xXpacoXx","recepcionista");
+            currentAdmin.BackupUsuarios();//Pruebo el backup de usuarios
         }
-
-
 
         sistema.logout();
         sistema.login("xXpacoXx","paco123");
-
 
         if(sistema.isRecepcionistaLoggedIn()){
             System.out.println("Bienvenido Recepcionista " + sistema.getCurrentUser().getNombre());
             Recepcionista currentRecepcionista = (Recepcionista) sistema.getCurrentUser();
 
-            System.out.println(currentRecepcionista.mostrarHabitaciones(sistema.getHotel()));
-            System.out.println(currentRecepcionista.mostrarReservas(sistema.getHotel()));
-            System.out.println(currentRecepcionista.mostrarEstadias(sistema.getHotel()));
+            System.out.println(currentRecepcionista.mostrarHabitaciones());
+            System.out.println(currentRecepcionista.mostrarReservas());
+            System.out.println(currentRecepcionista.mostrarEstadias());
         }
 
 

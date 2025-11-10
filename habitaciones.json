@@ -1,0 +1,17 @@
+[
+    {
+        "precio": 3000,
+        "tipoHabitacion": "SENCILLA",
+        "eestadoHabitacion": "OCUPADA_Y_RESERVADA_A_FUTURO"
+    },
+    {
+        "precio": 3000,
+        "tipoHabitacion": "SENCILLA",
+        "eestadoHabitacion": "RESERVADA"
+    },
+    {
+        "precio": 3000,
+        "tipoHabitacion": "SUITE",
+        "eestadoHabitacion": "DISPONIBLE"
+    }
+]

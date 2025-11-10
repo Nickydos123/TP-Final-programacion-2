@@ -1,6 +1,7 @@
 package modelo;
 import org.json.JSONObject;
-//Usuario no implementa ItoJson_fromJson porque funciona de manera un poco deiferente por el tema del sistema
+//Usuario no implementa ItoJson_fromJson porque funciona de manera un poco diferente por el tema del sistema
+//Ademas de que necesito poder distingir que hijo de usuario estoy metiendo en el Json
 public class Usuario extends Persona {
     protected String userName;//Identificador para los usuarios
     protected String password;
@@ -13,7 +14,7 @@ public class Usuario extends Persona {
         this.sistema = sistema;
     }
 
-    public JSONObject toJson(Usuario u) {
+    public static JSONObject toJson(Usuario u) {
         JSONObject obj = new JSONObject();
         obj.put("nombre", u.getNombre());
         obj.put("apellido", u.getApellido());
@@ -33,7 +34,7 @@ public class Usuario extends Persona {
         return obj;
     }
 
-    public static Usuario fromJson(JSONObject obj, Sistema sistema) {
+    public static Usuario fromJson(JSONObject obj, Sistema sistema) {//Necesito el sistema porque quiero que cada Usuario sepa a que sistema pertenece
         String tipo = obj.getString("tipo");
         String nombre = obj.getString("nombre");
         String apellido = obj.getString("apellido");

@@ -11,27 +11,27 @@ public class Recepcionista extends Usuario implements IMuestraDatoHotel, IRegist
     }
 
     @Override
-    public String mostrarHabitaciones(Hotel hotel) {
+    public String mostrarHabitaciones() {
         StringBuilder sb = new StringBuilder();
-        for(Habitacion habitacion : hotel.getHabitaciones().values()){
+        for(Habitacion habitacion : sistema.getHotel().getHabitaciones().values()){
             sb.append(habitacion.toString()).append("\n");
         }
         return sb.toString();
     }
 
     @Override
-    public String mostrarReservas(Hotel hotel) {
+    public String mostrarReservas() {
         StringBuilder sb = new StringBuilder();
-        for(Reserva reserva : hotel.getReservas().values()){
+        for(Reserva reserva : sistema.getHotel().getReservas().values()){
             sb.append(reserva.toString()).append("\n");
         }
         return sb.toString();
     }
 
     @Override
-    public String mostrarEstadias(Hotel hotel) {
+    public String mostrarEstadias() {
         StringBuilder sb = new StringBuilder();
-        for(Estadia estadia : hotel.getEstadias().values()){
+        for(Estadia estadia : sistema.getHotel().getEstadias().values()){
             sb.append(estadia.toString()).append("\n");
         }
         return sb.toString();
