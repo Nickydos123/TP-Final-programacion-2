@@ -6,10 +6,13 @@ import interfaces.IHaceBackUps;
 import interfaces.IManejaUsuarios;
 
 public class Administrador extends Usuario implements IManejaUsuarios, IHaceBackUps, IAgrega_Quita_Habitaciones {
-    //El administrador tambien deberia poder agregar y quitar habitaciones del hotel
+    //El administrador también deberia poder agregar y quitar habitaciones del hotel
 
     public Administrador(String nombre, String apellido, String dni, String domicilio, String userName, String password, Sistema sistema) {
         super(nombre, apellido, dni, domicilio, userName, password, sistema);
+    }
+
+    public Administrador() {
     }
 
     @Override

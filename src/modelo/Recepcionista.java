@@ -14,6 +14,9 @@ public class Recepcionista extends Usuario implements IMuestraDatoHotel, IRegist
         super(nombre, apellido, dni, domicilio, userName, password, sistema);
     }
 
+    public Recepcionista() {
+    }
+
     @Override
     public String mostrarHabitaciones() {
         StringBuilder sb = new StringBuilder();

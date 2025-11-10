@@ -14,6 +14,9 @@ public class Usuario extends Persona {
         this.sistema = sistema;
     }
 
+    public Usuario() {
+    }
+
     public static JSONObject toJson(Usuario u) {
         JSONObject obj = new JSONObject();
         obj.put("nombre", u.getNombre());
