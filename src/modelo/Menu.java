@@ -5,6 +5,7 @@ import exceptions.*;
 import org.json.JSONException;
 
 import java.util.InputMismatchException;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Menu {
@@ -207,26 +208,100 @@ public class Menu {
     }
 
     private void menuRecepcionista(Sistema sistema, Scanner entrada) {
+        Recepcionista currentRecepcionista = (Recepcionista) sistema.getCurrentUser();
         boolean salir = false;
         while (!salir) {
             System.out.println();
             System.out.println("=== Menu Recepcionista ===");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
+            System.out.println("1. Mostrar Habitaciones");
+            System.out.println("2. Mostrar Reservas");
+            System.out.println("3. Mostrar Estadias");
+            System.out.println("4. Registrar Reservas");
+            System.out.println("5. Hacer Check In");
+            System.out.println("6. Hacer Check Out");
+            System.out.println("7. Cambiar Estado de Mantenimiento");
+            System.out.println("8. Terminar el Mantenimiento");
             System.out.println("9. Cerrar sesión");
             System.out.println("0. Volver al menú principal");
             System.out.print("> ");
             String opcion = entrada.nextLine().trim();
             switch (opcion) {
                 case "1":
-                    System.out.println("");
+                    System.out.println("Habitaciones Disponibles");
+                    currentRecepcionista.mostrarHabitaciones();
                     break;
                 case "2":
-                    System.out.println("");
+                    System.out.println("Mostrar Reservas");
+                    currentRecepcionista.mostrarReservas();
                     break;
                 case "3":
-                    System.out.println("");
+                    System.out.println("Mostrar Estadias");
+                    currentRecepcionista.mostrarEstadias();
+                    break;
+                case "4":
+                    LocalDate fechaEspecifica = LocalDate.now()
+                            .withYear(2024)
+                            .withMonth(10)
+                            .withDayOfMonth(26);
+                    Reserva reservaIngresar = new Reserva();
+                    System.out.println("Registrar Reservas: ");
+
+                    System.out.println("Ingrese el ID de la habitacion");
+                    reservaIngresar.setIdHabitacion(entrada.nextInt());
+
+                    System.out.println("Ingrese el DNI Pasajero");
+                    reservaIngresar.setPasajeroDni(entrada.nextLine());
+
+                    System.out.println("Ingrese la fecha de la reserva");
+
+                    System.out.println("Ingrese el Año");
+                    reservaIngresar.setDesde(fechaEspecifica.withYear(entrada.nextInt()));
+                    System.out.println("Ingrese el Mes");
+                    reservaIngresar.setDesde(fechaEspecifica.withMonth(entrada.nextInt()));
+                    System.out.println("Ingrese el dia");
+                    reservaIngresar.setDesde(fechaEspecifica.withDayOfMonth(entrada.nextInt()));
+
+                    System.out.println("Ingrese el año de salida");
+                    reservaIngresar.setHasta(fechaEspecifica.withYear(entrada.nextInt()));
+                    System.out.println("Ingrese el mes de salida");
+                    reservaIngresar.setHasta(fechaEspecifica.withMonth(entrada.nextInt()));
+                    System.out.println("Ingrese el dia de salida");
+                    reservaIngresar.setHasta(fechaEspecifica.withDayOfMonth(entrada.nextInt()));
+                    try {
+                       currentRecepcionista.registraReserva(reservaIngresar);
+                    } catch (ExceptionReservaConflicto e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case "5":
+                    System.out.println("CheckIn");
+                    try {
+                        currentRecepcionista.hacerCheckIn(entrada.nextInt());
+                    } catch (ExceptionIdNoencontrado | ExceptionEstadoIlegal e) {
+                        System.out.println(e.getMessage());
+                    }
+                case "6":
+                    System.out.println("CheckOut");
+                    try {
+                        currentRecepcionista.hacerCheckOut(entrada.nextInt());
+                    } catch (ExceptionIdNoencontrado | ExceptionEstadoIlegal e) {
+                        System.out.println(e.getMessage());
+                    }
+                case "7":
+                    System.out.println("Cambiar Estado de Mantenimiento");
+                    try {
+                        currentRecepcionista.cambiarEstadoAMantenimiento(entrada.nextInt());
+                    } catch (ExceptionIdNoencontrado | ExceptionHabitacionNoDisponible e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case "8":
+                    System.out.println("Terminar Mantenimiento");
+                    try {
+                        currentRecepcionista.terMinarMantenimiento(entrada.nextInt());
+                    } catch (ExceptionIdNoencontrado e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case "9":
                     try {

@@ -1,5 +1,6 @@
 package interfaces;
 
+import modelo.Recepcionista;
 import modelo.Reserva;
 import modelo.Hotel;
 import java.time.LocalDate;
