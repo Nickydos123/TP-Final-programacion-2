@@ -1,8 +1,6 @@
 package modelo;
 
-import exceptions.ExceptionNoCurrentUser;
-import exceptions.ExceptionUsuarioNoAutorizado;
-import exceptions.ExceptionUsuarioNoEncontrado;
+import exceptions.*;
 import org.json.JSONException;
 
 import java.util.Scanner;
@@ -112,10 +110,26 @@ public class Menu {
                 case "2":
                     System.out.println("Ingrese los datos del usuario que desea agregar");
                     System.out.println("Ingrese el nombre del usuario");
-                    //Completar
+                    String nombre = entrada.nextLine();
+                    System.out.println("Ingrese el apellido de usuario");
+                    String apellido = entrada.nextLine();
+                    System.out.println("Ingrese el domicilio del usuario");
+                    String domicilio = entrada.nextLine();
+                    System.out.println("Ingrese le DNI del usuario");
+                    String dni = entrada.nextLine();
+                    System.out.println("Ingrese el Nombre de Usuario del usuario");
+                    String userName = entrada.nextLine();
+                    System.out.println("Ingrese la contraseña del usuario");
+                    String password = entrada.nextLine();
+
+                    try {
+                        currentAdmin.addUsuario(new Usuario(nombre,apellido,dni,domicilio,userName,password,sistema));
+                    }catch (ExceptionUserNameRepetido e){
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case "3":
-                    System.out.println("Ingrese el id del Usuario que desea eliminar");
+                    System.out.println("Ingrese el Nombre de usuario del Usuario que desea eliminar");
                     String userNameIngresado = entrada.nextLine();
                     try {
                         currentAdmin.removeUsuario(userNameIngresado);
@@ -124,7 +138,19 @@ public class Menu {
                     }
                     break;
                 case "4":
-                    System.out.println("");
+                    System.out.println("Ingrese el Nombre de usuario del Usuario al que desea otorgar permisos");
+                    String userNameAasignarPermisos = entrada.nextLine();
+                    System.out.println("Ingrese: 'administrador' para asignar permisos de administrador");
+                    System.out.println("ingrese: 'recepcionista' para aignar permisos de recpcionista");
+                    String tipo = entrada.nextLine();
+                    try {
+                        currentAdmin.asignarTipo(userNameAasignarPermisos,tipo);
+                    }catch (ExceptionTipoNoValido e){
+
+                    }catch (ExceptionUsuarioNoEncontrado e1){
+
+                    }
+
                     break;
                 case "5":
                     System.out.println("");
