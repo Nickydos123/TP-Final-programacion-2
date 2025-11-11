@@ -2,7 +2,7 @@ package modelo;
 
 import enums.EtipoHabitacion;
 import exceptions.*;
-import org.json.JSONException;
+
 
 import java.util.InputMismatchException;
 import java.time.LocalDate;
@@ -133,20 +133,22 @@ public class Menu {
 
                     try {
                         currentAdmin.addUsuario(usuarioAAgregar);
+                        System.out.println("Usuario agregado con exito.");
                     }catch (ExceptionUserNameRepetido e){
                         System.out.println(e.getMessage());
                     }
-                    System.out.println("Usuario agregado con exito.");
+
                     break;
                 case "3":
                     System.out.println("Ingrese el Nombre de usuario del Usuario que desea eliminar");
                     String userNameIngresado = entrada.nextLine();
                     try {
                         currentAdmin.removeUsuario(userNameIngresado);
+                        System.out.println("Usuario eliminado con exito.");
                     } catch (ExceptionUsuarioNoEncontrado e) {
                         System.out.println(e.getMessage());
                     }
-                    System.out.println("Usuario eliminado con exito.");
+
                     break;
                 case "4":
                     System.out.println("Ingrese el Nombre de usuario del Usuario al que desea otorgar permisos");
@@ -156,10 +158,11 @@ public class Menu {
                     String tipo = entrada.nextLine();
                     try {
                         currentAdmin.asignarTipo(userNameAasignarPermisos,tipo);
+                        System.out.println("Permisos asignados con exito.");
                     }catch (ExceptionTipoNoValido | ExceptionUsuarioNoEncontrado e){
                         System.out.println(e.getMessage());
                     }
-                    System.out.println("Permisos asignados con exito.");
+
                     break;
                 case "5":
                     Habitacion habitacionAAgregar = new Habitacion();
@@ -178,6 +181,7 @@ public class Menu {
                         entrada.nextLine();
                     } catch (InputMismatchException e) {
                         System.out.println("Precio no valido. Ingrese un numero.");
+                        break;
                     }
 
 
@@ -189,6 +193,7 @@ public class Menu {
                     try {
                         int idHabitacionAEliminar = entrada.nextInt();
                         currentAdmin.removeHabitacion(idHabitacionAEliminar);
+                        System.out.println("Habitacion eliminada con exito.");
                     } catch (NumberFormatException e) {
                         System.out.println("ID no valido. Ingrese un numero.");
                     } catch (ExceptionIdNoencontrado e) {
@@ -267,24 +272,24 @@ public class Menu {
                     reservaIngresar.setPasajeroDni(entrada.nextLine());
                     try {
                         System.out.println("Ingrese la fecha de la reserva:");
-                        System.out.println("Ingrese el Año");
+                        System.out.println("Ingrese el Año de desde");
                         int desdeAño = entrada.nextInt();
                         entrada.nextLine();
-                        System.out.println("Ingrese el Mes");
+                        System.out.println("Ingrese el Mes desde");
                         int desdeMes = entrada.nextInt();
                         entrada.nextLine();
-                        System.out.println("Ingrese el dia");
+                        System.out.println("Ingrese el dia desde");
                         int desdeDia = entrada.nextInt();
                         entrada.nextLine();
                         reservaIngresar.setDesde(LocalDate.of(desdeAño, desdeMes, desdeDia));
 
-                        System.out.println("Ingrese el año de salida");
+                        System.out.println("Ingrese el año de hasta");
                         int hastaAño = entrada.nextInt();
                         entrada.nextLine();
-                        System.out.println("Ingrese el mes de salida");
+                        System.out.println("Ingrese el mes de hasta");
                         int hastaMes = entrada.nextInt();
                         entrada.nextLine();
-                        System.out.println("Ingrese el dia de salida");
+                        System.out.println("Ingrese el dia de hasta");
                         int hastaDia = entrada.nextInt();
                         entrada.nextLine();
                         reservaIngresar.setHasta(LocalDate.of(hastaAño, hastaMes, hastaDia));
@@ -338,10 +343,11 @@ public class Menu {
                     try {
                         currentRecepcionista.terMinarMantenimiento(entrada.nextInt());
                         entrada.nextLine();
+                        System.out.println("Mantenimiento finalizado con éxito");
                     } catch (ExceptionIdNoencontrado e) {
                         System.out.println(e.getMessage());
                     }
-                    System.out.println("Mantenimiento finalizado con éxito");
+
                     break;
                 case "9":
                     try {
