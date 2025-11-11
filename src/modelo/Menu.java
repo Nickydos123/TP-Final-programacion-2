@@ -86,6 +86,8 @@ public class Menu {
                     System.out.println("Opción no válida.");
             }
         }
+        Backupper.backupHotel(sistema.getHotel());//Al salir hago un backup del hotel
+        SistemBackupper.backupSistema(sistema);//Al salir hago un backup del sistema
     }
 
     private void menuAdmin(Sistema sistema, Scanner entrada) {
@@ -125,6 +127,7 @@ public class Menu {
                     usuarioAAgregar.setUserName(entrada.nextLine());
                     System.out.println("Ingrese la contraseña del usuario");
                     usuarioAAgregar.setPassword(entrada.nextLine());
+                    usuarioAAgregar.setSistema(sistema);//Tengo que agregar el sistema en usuario para que funcione correctamente
 
                     try {
                         currentAdmin.addUsuario(usuarioAAgregar);
@@ -299,7 +302,7 @@ public class Menu {
                     System.out.println("CheckOut");
                     System.out.println("Ingrese el ID de la estadia para hacer CheckOut:");
                     try {
-                        currentRecepcionista.hacerCheckOut(entrada.nextInt());
+                        Backupper.backupHistorialEstadias(currentRecepcionista.hacerCheckOut(entrada.nextInt()),"historial_estadias.json");//Guardo el historial antes de hacer el checkout
                         entrada.nextLine();
                         System.out.println("CheckOut realizado con éxito");
                     } catch (ExceptionIdNoencontrado | ExceptionEstadoIlegal e) {

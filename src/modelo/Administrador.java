@@ -34,7 +34,7 @@ public class Administrador extends Usuario implements IManejaUsuarios, IHaceBack
     @Override
     public void addHabitacion(Habitacion habitacion) throws ExceptionIdRepetido {
         if(sistema.getHotel().getHabitaciones().containsKey(habitacion.getId())){
-            throw new ExceptionIdRepetido("El id de la habitacion ya se encuntra en uso");
+            throw new ExceptionIdRepetido("El id de la habitacion ya se encuentra en uso");
         }
         sistema.getHotel().getHabitaciones().put(habitacion.getId(),habitacion);
     }

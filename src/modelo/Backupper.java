@@ -2,10 +2,12 @@ package modelo;
 
 import interfaces.ItoJson_fromJson;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import persistentes.JsonUtiles;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class Backupper<T extends ItoJson_fromJson<T>> {
         JsonUtiles.grabarUnJson(array, archivo); //Graba el archivo directamente
     }
 
-    public HashMap<Integer, T> readMap(String archivo, T fabrica){//La fabrica la tengo que recibir desde afuera porque no puedo instanciar la dentro con el tipo generico
+    public HashMap<Integer, T> readMap(String archivo, T fabrica) throws FileNotFoundException{//La fabrica la tengo que recibir desde afuera porque no puedo instanciar la dentro con el tipo generico
         JSONTokener jsonTokener = JsonUtiles.leerUnJson(archivo);
         JSONArray jsonArray = new JSONArray(jsonTokener);
         HashMap<Integer,T> map = new HashMap<>();
@@ -44,13 +46,14 @@ public class Backupper<T extends ItoJson_fromJson<T>> {
         Backupper<Estadia> estadiasBackupper = new Backupper<>();
         Backupper<Reserva> reservasBackupper = new Backupper<>();
 
+
         habitacionesBackupper.backupMap(hotel.getHabitaciones(),"habitaciones.json");
         estadiasBackupper.backupMap(hotel.getEstadias(),"estadias.json");
         reservasBackupper.backupMap(hotel.getReservas(),"reservas.json");
     }
 
     //Metodo para leer el hotel al completo
-    public static Hotel leerHotel(){
+    public static Hotel leerHotel() throws FileNotFoundException {
         Backupper<Habitacion> habitacionesBackupper = new Backupper<>();
         Backupper<Estadia> estadiasBackupper = new Backupper<>();
         Backupper<Reserva> reservasBackupper = new Backupper<>();
@@ -60,5 +63,19 @@ public class Backupper<T extends ItoJson_fromJson<T>> {
         HashMap<Integer,Reserva> reservas = reservasBackupper.readMap("reservas.json",new Reserva());
 
         return new Hotel(habitaciones,reservas,estadias);
+    }
+
+    //Metodo para hacer una historial de estadias
+    public static void backupHistorialEstadias(Estadia estadia, String archivo) {
+        Backupper<Estadia> estadiasBackupper = new Backupper<>();
+        HashMap<Integer, Estadia> historial;//El historial se va a ir actualizando
+        try {
+            historial = estadiasBackupper.readMap(archivo, new Estadia());//Leo el historial existente
+        } catch (FileNotFoundException e) {
+            historial = new HashMap<>();//Si no existe el archivo, creo un historial vacio
+        }
+
+        historial.put(estadia.getId(), estadia);//Agrego la nueva estadia al historial
+        estadiasBackupper.backupMap(historial, archivo);//Hago el backup del historial actualizado
     }
 }
