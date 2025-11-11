@@ -100,6 +100,8 @@ public class Menu {
             System.out.println("4. Asignar tipo a un Usuario");
             System.out.println("5. Agregar una Habitacion al Hotel");
             System.out.println("6. Eliminar una Habitacion del Hotel");
+            System.out.println("7. Respaldar datos del hotel");
+            System.out.println("8. Respaldar datos del sistema");
             System.out.println("9. Cerrar sesión");
             System.out.println("0. Volver al menú principal");
             System.out.print("> ");
@@ -190,6 +192,16 @@ public class Menu {
                         System.out.println(e.getMessage());
                     }
                     entrada.nextLine();
+                    break;
+                case "7":
+                        System.out.println("Respaldar Datos De Hotel");
+                        currentAdmin.BackupHotel();
+                        System.out.println("Hotel backup agregada con exito.");
+                    break;
+                case "8":
+                        System.out.println("Respaldar Datos De Usuario");
+                        currentAdmin.BackupUsuarios();
+                        System.out.println("Usuario backup agregada con exito.");
                     break;
                 case "9":
                     try {
