@@ -4,10 +4,11 @@ import interfaces.ItoJson_fromJson;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Objects;
 
 public class Reserva implements ItoJson_fromJson<Reserva> {
-    static int cantReservas = 0;
+    private static int nextId = 1;
     private int id;
     private int idHabitacion;
     private String pasajeroDni; //en caso de que se quiera vincular con un pasajero cambiarlo por un Id de pasajero
@@ -15,8 +16,7 @@ public class Reserva implements ItoJson_fromJson<Reserva> {
     private LocalDate hasta;
 
     public Reserva(int idHabitacion, String pasajeroDni, LocalDate desde, LocalDate hasta) {
-        cantReservas++;
-        this.id = cantReservas;
+        this.id = nextId++;
         this.idHabitacion = idHabitacion;
         this.pasajeroDni = pasajeroDni;
         this.desde = desde;
@@ -29,6 +29,9 @@ public class Reserva implements ItoJson_fromJson<Reserva> {
         this.pasajeroDni = pasajeroDni;
         this.desde = desde;
         this.hasta = hasta;
+        if (id >= nextId) {
+            nextId = id + 1;
+        }
     }
 
     public Reserva() {
@@ -84,12 +87,24 @@ public class Reserva implements ItoJson_fromJson<Reserva> {
         return idHabitacion;
     }
 
-    public static int getCantReservas() {
-        return cantReservas;
+    /*public static int getCantReservas() {
+        return nextId;
     }
 
     public static void setCantReservas(int cantReservas) {
-        Reserva.cantReservas = cantReservas;
+        Reserva.nextId = cantReservas;
+    }*/
+
+    public static void actualizarNextId(Collection<Reserva> reservas) {
+        int max = 0;
+        if (reservas != null) {
+            for (Reserva r : reservas) {
+                if (r != null && r.getId() > max) {
+                    max = r.getId();
+                }
+            }
+        }
+        nextId = max + 1;
     }
 
     public void setId(int id) {

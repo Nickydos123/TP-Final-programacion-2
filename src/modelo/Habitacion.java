@@ -6,20 +6,21 @@ import interfaces.ItoJson_fromJson;
 import jdk.dynalink.beans.StaticClass;
 import org.json.JSONObject;
 
+import java.util.Collection;
 import java.util.Objects;
 
 
 
 public class Habitacion implements ItoJson_fromJson<Habitacion> {
 
-    static int contID = 0;
+    private static int nextId = 1;
     private int id;
     private EtipoHabitacion tipoHabitacion;
     private double precio;
     private EestadoHabitacion eestadoHabitacion;
 
     public Habitacion(EtipoHabitacion tipoHabitacion, double precio, EestadoHabitacion eestadoHabitacion) {
-        this.id = ++contID;
+        this.id = nextId++;
         this.tipoHabitacion = tipoHabitacion;
         this.precio = precio;
         this.eestadoHabitacion = eestadoHabitacion;
@@ -27,13 +28,16 @@ public class Habitacion implements ItoJson_fromJson<Habitacion> {
 
     public Habitacion(int id, EtipoHabitacion tipoHabitacion, double precio, EestadoHabitacion eestadoHabitacion) {
         this.id = id;
+        if(id >= nextId){
+            nextId = id + 1;
+        }
         this.tipoHabitacion = tipoHabitacion;
         this.precio = precio;
         this.eestadoHabitacion = eestadoHabitacion;
     }
 
     public Habitacion() {
-        this.id = ++contID;
+        this.id = nextId++;
         this.eestadoHabitacion = EestadoHabitacion.DISPONIBLE;
     }
 
@@ -103,4 +107,17 @@ public class Habitacion implements ItoJson_fromJson<Habitacion> {
                 ", eestadoHabitacion=" + eestadoHabitacion +
                 '}';
     }
+
+    public static void actualizarNextId(Collection<Habitacion> habitaciones) {
+        int max = 0;
+        if (habitaciones != null) {
+            for (Habitacion h : habitaciones) {
+                if (h != null && h.getId() > max) {
+                    max = h.getId();
+                }
+            }
+        }
+        nextId = max + 1;
+    }
+
 }

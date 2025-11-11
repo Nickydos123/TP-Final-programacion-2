@@ -4,10 +4,11 @@ import interfaces.ItoJson_fromJson;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Objects;
 
 public class Estadia implements ItoJson_fromJson<Estadia> {
-    static int cantEstadias = 0;
+    private static int nextId = 1;
     private int id;
     private int idHabitacion;
     private String pasajeroDni;
@@ -16,8 +17,7 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
     private LocalDate fechaCheckOutReal;
 
     public Estadia(int idHabitacion, String pasajeroDni, LocalDate fechaCheckIn, LocalDate fechaCheckOut) {
-        cantEstadias++;
-        this.id = cantEstadias;
+        this.id = nextId++;
         this.idHabitacion = idHabitacion;
         this.pasajeroDni = pasajeroDni;
         this.fechaCheckIn = fechaCheckIn;
@@ -32,6 +32,9 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
         this.fechaCheckIn = fechaCheckIn;
         this.fechaCheckOut = fechaCheckOut;
         this.fechaCheckOutReal = fechaCheckOutReal;
+        if (id >= nextId) {
+            nextId = id + 1;
+        }
     }
 
     public Estadia() {
@@ -103,6 +106,18 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
 
     }
 
+    public static void actualizarNextId(Collection<Estadia> estadias) {
+        int max = 0;
+        if (estadias != null) {
+            for (Estadia e : estadias) {
+                if (e != null && e.getId() > max) {
+                    max = e.getId();
+                }
+            }
+        }
+        nextId = max + 1;
+    }
+
     public int getId() {
         return id;
     }
@@ -128,11 +143,11 @@ public class Estadia implements ItoJson_fromJson<Estadia> {
     }
 
     public static int getCantEstadias() {
-        return cantEstadias;
+        return nextId;
     }
 
     public static void setCantEstadias(int cantEstadias) {
-        Estadia.cantEstadias = cantEstadias;
+        Estadia.nextId = cantEstadias;
     }
 
     public LocalDate getFechaCheckOutReal() {

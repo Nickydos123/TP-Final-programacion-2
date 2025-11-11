@@ -123,7 +123,7 @@ public class Menu {
                     usuarioAAgregar.setApellido(entrada.nextLine());
                     System.out.println("Ingrese el domicilio del usuario");
                     usuarioAAgregar.setDomicilio(entrada.nextLine());
-                    System.out.println("Ingrese le DNI del usuario");
+                    System.out.println("Ingrese el DNI del usuario");
                     usuarioAAgregar.setDni(entrada.nextLine());
                     System.out.println("Ingrese el Nombre de Usuario del usuario");
                     usuarioAAgregar.setUserName(entrada.nextLine());
