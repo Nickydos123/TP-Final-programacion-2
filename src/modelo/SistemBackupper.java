@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import persistentes.JsonUtiles;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class SistemBackupper {
         JsonUtiles.grabarUnJson(array, archivo);
     }
 
-    public static HashMap<String, Usuario> readUserMap(String archivo,Sistema sistema){
+    public static HashMap<String, Usuario> readUserMap(String archivo,Sistema sistema) throws FileNotFoundException {
         JSONTokener jsonTokener = JsonUtiles.leerUnJson(archivo);
         JSONArray jsonArray = new JSONArray(jsonTokener);
         HashMap<String,Usuario> map = new HashMap<>();
@@ -38,7 +39,7 @@ public class SistemBackupper {
         SistemBackupper.backupUserMap(sistema.getUsuarios(),"Usuarios.json");
     }
 
-    public static Sistema leerSistema(){
+    public static Sistema leerSistema() throws FileNotFoundException{
         Hotel hotelDelSistema = Backupper.leerHotel();
         Sistema sistemaLeido = new Sistema();//Lo instancio primero pq luego se usa a si mismo en el setUsuarios
 

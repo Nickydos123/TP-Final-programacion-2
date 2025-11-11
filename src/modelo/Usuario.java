@@ -59,7 +59,7 @@ public class Usuario extends Persona {
 
 
 
-    protected String getUserName() {
+    public String getUserName() {
         return this.userName;
     }
 
