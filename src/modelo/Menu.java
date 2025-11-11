@@ -18,7 +18,7 @@ public class Menu {
     }
 
     //Esto es una solucion para el problema de la compatibilidad del limpiado de pantalla segun el OS
-    private void limpiarTerminal() {
+    /*private void limpiarTerminal() {
         try {
             if (System.getProperty("os.name").contains("Windows"))
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
@@ -27,7 +27,7 @@ public class Menu {
         } catch (Exception e) {
             System.out.println("No se pudo limpiar la terminal");
         }
-    }
+    }*/
 
 
     private void menuBienvenida(){
@@ -39,8 +39,6 @@ public class Menu {
         String userName = entrada.nextLine();
         System.out.println("Ingrese su Contraseña:");
         String password = entrada.nextLine();
-
-        try {
             sistema.login(userName,password);
             if (sistema.isAdminLoggedIn()){
                 System.out.println("Bienvenido Administrador " + sistema.getCurrentUser().getNombre());
@@ -49,11 +47,6 @@ public class Menu {
             } else if (sistema.isUserLoggedIn()) {
                 System.out.println("Bienvenido Usuario " + sistema.getCurrentUser().getNombre());
             }
-        } catch (ExceptionUsuarioNoAutorizado e) {
-            System.out.println(e.getMessage());
-        }finally {
-            limpiarTerminal();
-        }
     }
 
     public void startMenu(){
@@ -67,7 +60,14 @@ public class Menu {
             String opcion = entrada.nextLine().trim();
             switch (opcion) {
                 case "1":
-                    menuBienvenida();
+                    try {
+                        menuBienvenida();
+                    }catch (ExceptionUsuarioNoAutorizado e){
+                        System.out.println("No se pudo iniciar sesión. Verifique sus credenciales.");
+                        break;
+                    } /*finally {
+                        limpiarTerminal();
+                    }*/
                     if (sistema.isAdminLoggedIn()) {
                         menuAdmin(sistema, entrada);
                     } else if (sistema.isRecepcionistaLoggedIn()) {
@@ -141,27 +141,29 @@ public class Menu {
                     } catch (ExceptionUsuarioNoEncontrado e) {
                         System.out.println(e.getMessage());
                     }
+                    System.out.println("Usuario eliminado con exito.");
                     break;
                 case "4":
                     System.out.println("Ingrese el Nombre de usuario del Usuario al que desea otorgar permisos");
                     String userNameAasignarPermisos = entrada.nextLine();
                     System.out.println("Ingrese: 'administrador' para asignar permisos de administrador");
-                    System.out.println("ingrese: 'recepcionista' para aignar permisos de recpcionista");
+                    System.out.println("ingrese: 'recepcionista' para aignar permisos de recepcionista");
                     String tipo = entrada.nextLine();
                     try {
                         currentAdmin.asignarTipo(userNameAasignarPermisos,tipo);
                     }catch (ExceptionTipoNoValido | ExceptionUsuarioNoEncontrado e){
                         System.out.println(e.getMessage());
                     }
+                    System.out.println("Permisos asignados con exito.");
                     break;
                 case "5":
                     Habitacion habitacionAAgregar = new Habitacion();
-                    System.out.println("Ingrese el tipo de la habitacion a agregar (SIMPLE, DOBLE, SUITE):");
+                    System.out.println("Ingrese el tipo de la habitacion a agregar (SENCILLA, DOBLE, SUITE):");
                     String tipoHabitacion = entrada.nextLine();
                     try {
                         habitacionAAgregar.setTipoHabitacion(EtipoHabitacion.valueOf(tipoHabitacion.toUpperCase()));
                     } catch (IllegalArgumentException e) {
-                        System.out.println("Tipo de habitacion no valido. Usar: SIMPLE, DOBLE o SUITE");
+                        System.out.println("Tipo de habitacion no valido. Usar: SENCILLA, DOBLE o SUITE");
                         break;
                     }
                     System.out.println("Ingrese el precio de la habitacion:");
@@ -228,80 +230,103 @@ public class Menu {
             switch (opcion) {
                 case "1":
                     System.out.println("Habitaciones Disponibles");
-                    currentRecepcionista.mostrarHabitaciones();
+                    System.out.println(currentRecepcionista.mostrarHabitaciones());
                     break;
                 case "2":
                     System.out.println("Mostrar Reservas");
-                    currentRecepcionista.mostrarReservas();
+                    System.out.println(currentRecepcionista.mostrarReservas());
                     break;
                 case "3":
                     System.out.println("Mostrar Estadias");
-                    currentRecepcionista.mostrarEstadias();
+                    System.out.println(currentRecepcionista.mostrarEstadias());
                     break;
                 case "4":
-                    LocalDate fechaEspecifica = LocalDate.now()
-                            .withYear(2024)
-                            .withMonth(10)
-                            .withDayOfMonth(26);
                     Reserva reservaIngresar = new Reserva();
                     System.out.println("Registrar Reservas: ");
 
                     System.out.println("Ingrese el ID de la habitacion");
                     reservaIngresar.setIdHabitacion(entrada.nextInt());
+                    entrada.nextLine();
 
                     System.out.println("Ingrese el DNI Pasajero");
                     reservaIngresar.setPasajeroDni(entrada.nextLine());
+                    try {
+                        System.out.println("Ingrese la fecha de la reserva:");
+                        System.out.println("Ingrese el Año");
+                        int desdeAño = entrada.nextInt();
+                        entrada.nextLine();
+                        System.out.println("Ingrese el Mes");
+                        int desdeMes = entrada.nextInt();
+                        entrada.nextLine();
+                        System.out.println("Ingrese el dia");
+                        int desdeDia = entrada.nextInt();
+                        entrada.nextLine();
+                        reservaIngresar.setDesde(LocalDate.of(desdeAño, desdeMes, desdeDia));
 
-                    System.out.println("Ingrese la fecha de la reserva");
-
-                    System.out.println("Ingrese el Año");
-                    reservaIngresar.setDesde(fechaEspecifica.withYear(entrada.nextInt()));
-                    System.out.println("Ingrese el Mes");
-                    reservaIngresar.setDesde(fechaEspecifica.withMonth(entrada.nextInt()));
-                    System.out.println("Ingrese el dia");
-                    reservaIngresar.setDesde(fechaEspecifica.withDayOfMonth(entrada.nextInt()));
-
-                    System.out.println("Ingrese el año de salida");
-                    reservaIngresar.setHasta(fechaEspecifica.withYear(entrada.nextInt()));
-                    System.out.println("Ingrese el mes de salida");
-                    reservaIngresar.setHasta(fechaEspecifica.withMonth(entrada.nextInt()));
-                    System.out.println("Ingrese el dia de salida");
-                    reservaIngresar.setHasta(fechaEspecifica.withDayOfMonth(entrada.nextInt()));
+                        System.out.println("Ingrese el año de salida");
+                        int hastaAño = entrada.nextInt();
+                        entrada.nextLine();
+                        System.out.println("Ingrese el mes de salida");
+                        int hastaMes = entrada.nextInt();
+                        entrada.nextLine();
+                        System.out.println("Ingrese el dia de salida");
+                        int hastaDia = entrada.nextInt();
+                        entrada.nextLine();
+                        reservaIngresar.setHasta(LocalDate.of(hastaAño, hastaMes, hastaDia));
+                    } catch (java.time.DateTimeException e) {
+                        System.out.println("Fecha no valida.");
+                        break;
+                    }
                     try {
                        currentRecepcionista.registraReserva(reservaIngresar);
+                        System.out.println("Reserva registrada con éxito");
                     } catch (ExceptionReservaConflicto e) {
                         System.out.println(e.getMessage());
                     }
                     break;
                 case "5":
                     System.out.println("CheckIn");
+                    System.out.println("Ingrese el ID de la reserva para hacer CheckIn:");
                     try {
                         currentRecepcionista.hacerCheckIn(entrada.nextInt());
+                        entrada.nextLine();
+                        System.out.println("CheckIn realizado con éxito");
                     } catch (ExceptionIdNoencontrado | ExceptionEstadoIlegal e) {
                         System.out.println(e.getMessage());
                     }
+                    break;
                 case "6":
                     System.out.println("CheckOut");
+                    System.out.println("Ingrese el ID de la estadia para hacer CheckOut:");
                     try {
                         currentRecepcionista.hacerCheckOut(entrada.nextInt());
+                        entrada.nextLine();
+                        System.out.println("CheckOut realizado con éxito");
                     } catch (ExceptionIdNoencontrado | ExceptionEstadoIlegal e) {
                         System.out.println(e.getMessage());
                     }
+                    break;
                 case "7":
                     System.out.println("Cambiar Estado de Mantenimiento");
+                    System.out.println("Ingrese el ID de la habitacion a cambiar de estado:");
                     try {
                         currentRecepcionista.cambiarEstadoAMantenimiento(entrada.nextInt());
+                        entrada.nextLine();
+                        System.out.println("El estado se actualizó con éxito");
                     } catch (ExceptionIdNoencontrado | ExceptionHabitacionNoDisponible e) {
                         System.out.println(e.getMessage());
                     }
                     break;
                 case "8":
                     System.out.println("Terminar Mantenimiento");
+                    System.out.println("Ingrese el ID de la habitacion a cambiar de estado:");
                     try {
                         currentRecepcionista.terMinarMantenimiento(entrada.nextInt());
+                        entrada.nextLine();
                     } catch (ExceptionIdNoencontrado e) {
                         System.out.println(e.getMessage());
                     }
+                    System.out.println("Mantenimiento finalizado con éxito");
                     break;
                 case "9":
                     try {

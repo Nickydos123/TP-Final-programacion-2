@@ -33,6 +33,7 @@ public class Habitacion implements ItoJson_fromJson<Habitacion> {
     }
 
     public Habitacion() {
+        this.eestadoHabitacion = EestadoHabitacion.DISPONIBLE;
     }
 
     public JSONObject toJson(){
