@@ -291,7 +291,7 @@ public class Menu {
                     try {
                         System.out.println("Ingrese la fecha de la reserva:");
                         System.out.println("Ingrese el Año de desde");
-                        int desdeAño = entrada.nextInt();
+                        int desdeAnio = entrada.nextInt();
                         entrada.nextLine();
                         System.out.println("Ingrese el Mes desde");
                         int desdeMes = entrada.nextInt();
@@ -299,10 +299,10 @@ public class Menu {
                         System.out.println("Ingrese el dia desde");
                         int desdeDia = entrada.nextInt();
                         entrada.nextLine();
-                        reservaIngresar.setDesde(LocalDate.of(desdeAño, desdeMes, desdeDia));
+                        reservaIngresar.setDesde(LocalDate.of(desdeAnio, desdeMes, desdeDia));
 
                         System.out.println("Ingrese el año de hasta");
-                        int hastaAño = entrada.nextInt();
+                        int hastaAnio = entrada.nextInt();
                         entrada.nextLine();
                         System.out.println("Ingrese el mes de hasta");
                         int hastaMes = entrada.nextInt();
@@ -310,7 +310,7 @@ public class Menu {
                         System.out.println("Ingrese el dia de hasta");
                         int hastaDia = entrada.nextInt();
                         entrada.nextLine();
-                        reservaIngresar.setHasta(LocalDate.of(hastaAño, hastaMes, hastaDia));
+                        reservaIngresar.setHasta(LocalDate.of(hastaAnio, hastaMes, hastaDia));
                     } catch (java.time.DateTimeException e) {
                         System.out.println("Fecha no valida.");
                         break;
@@ -384,7 +384,7 @@ public class Menu {
         }
     }
 
-    private void menuUsuario(Sistema sistema, Scanner entrada, Usuario currentUser) {
+    private void menuUsuario(Sistema sistema, Scanner entrada, Usuario currentUser) {//Dejo esto por si en un futuro el Usuario normal puede hacer algo en el programa
         boolean salir = false;
         while (!salir) {
             System.out.println();
