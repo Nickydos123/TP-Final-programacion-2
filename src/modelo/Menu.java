@@ -30,7 +30,7 @@ public class Menu {
     }*/
 
 
-    private void menuBienvenida(){
+    private Usuario menuBienvenida(){
         System.out.println("|--------------------------------------|");
         System.out.println("|Bienvenido al Administrador de Hoteles|");
         System.out.println("|--------------------------------------|");
@@ -39,14 +39,15 @@ public class Menu {
         String userName = entrada.nextLine();
         System.out.println("Ingrese su Contraseña:");
         String password = entrada.nextLine();
-            sistema.login(userName,password);
-            if (sistema.isAdminLoggedIn()){
-                System.out.println("Bienvenido Administrador " + sistema.getCurrentUser().getNombre());
-            } else if (sistema.isRecepcionistaLoggedIn()) {
-                System.out.println("Bienvenido Recepcionista " + sistema.getCurrentUser().getNombre());
-            } else if (sistema.isUserLoggedIn()) {
-                System.out.println("Bienvenido Usuario " + sistema.getCurrentUser().getNombre());
-            }
+        Usuario usuarioLogeado = sistema.login(userName,password);
+        if (sistema.isAdminLoggedIn()){
+            System.out.println("Bienvenido Administrador " + usuarioLogeado.getNombre());
+        } else if (sistema.isRecepcionistaLoggedIn()) {
+            System.out.println("Bienvenido Recepcionista " + usuarioLogeado.getNombre());
+        } else if (sistema.isUserLoggedIn()) {
+            System.out.println("Bienvenido Usuario " + usuarioLogeado.getNombre());
+        }
+        return usuarioLogeado;
     }
 
     public void startMenu(){
@@ -61,22 +62,22 @@ public class Menu {
             switch (opcion) {
                 case "1":
                     try {
-                        menuBienvenida();
+                        Usuario currentUser = menuBienvenida();
+                        if (sistema.isAdminLoggedIn()) {
+                            menuAdmin(sistema, entrada, (Administrador) currentUser);
+                        } else if (sistema.isRecepcionistaLoggedIn()) {
+                            menuRecepcionista(sistema, entrada, (Recepcionista) currentUser);
+                        } else if (sistema.isUserLoggedIn()) {
+                            menuUsuario(sistema, entrada, currentUser);
+                        } else {
+                            System.out.println("No se ha iniciado sesión correctamente.");
+                        }
                     }catch (ExceptionUsuarioNoAutorizado e){
                         System.out.println("No se pudo iniciar sesión. Verifique sus credenciales.");
                         break;
                     } /*finally {
                         limpiarTerminal();
                     }*/
-                    if (sistema.isAdminLoggedIn()) {
-                        menuAdmin(sistema, entrada);
-                    } else if (sistema.isRecepcionistaLoggedIn()) {
-                        menuRecepcionista(sistema, entrada);
-                    } else if (sistema.isUserLoggedIn()) {
-                        menuUsuario(sistema, entrada);
-                    } else {
-                        System.out.println("No se ha iniciado sesión correctamente.");
-                    }
                     break;
                 case "0":
                     System.out.println("Saliendo...");
@@ -90,8 +91,7 @@ public class Menu {
         SistemBackupper.backupSistema(sistema);//Al salir hago un backup del sistema
     }
 
-    private void menuAdmin(Sistema sistema, Scanner entrada) {
-        Administrador currentAdmin = (Administrador) sistema.getCurrentUser();
+    private void menuAdmin(Sistema sistema, Scanner entrada, Administrador currentAdmin) {
         boolean salir = false;
         while (!salir) {
             System.out.println();
@@ -104,6 +104,9 @@ public class Menu {
             System.out.println("6. Eliminar una Habitacion del Hotel");
             System.out.println("7. Respaldar datos del hotel");
             System.out.println("8. Respaldar datos del sistema");
+            System.out.println("10. Mostrar Habitaciones");
+            System.out.println("11. Mostrar Reservas");
+            System.out.println("12. Mostrar Estadias");
             System.out.println("9. Cerrar sesión");
             System.out.println("0. Volver al menú principal");
             System.out.print("> ");
@@ -177,8 +180,12 @@ public class Menu {
                     System.out.println("Ingrese el precio de la habitacion:");
                     try {
                         double precioHabitacion = entrada.nextDouble();
-                        habitacionAAgregar.setPrecio(precioHabitacion);
                         entrada.nextLine();
+                        if(precioHabitacion < 0){
+                            System.out.println("El precio no puede ser negativo.");
+                            break;
+                        }
+                        habitacionAAgregar.setPrecio(precioHabitacion);
                     } catch (InputMismatchException e) {
                         System.out.println("Precio no valido. Ingrese un numero.");
                         break;
@@ -220,6 +227,18 @@ public class Menu {
                     System.out.println("Sesión cerrada.");
                     salir = true;
                     break;
+                case "10":
+                    System.out.println("Mostrar Habitaciones");
+                    System.out.println(currentAdmin.mostrarHabitaciones());
+                    break;
+                case "11":
+                    System.out.println("Mostrar Reservas");
+                    System.out.println(currentAdmin.mostrarReservas());
+                    break;
+                case "12":
+                    System.out.println("Mostrar Estadias");
+                    System.out.println(currentAdmin.mostrarEstadias());
+                    break;
                 case "0":
                     salir = true;
                     break;
@@ -229,8 +248,7 @@ public class Menu {
         }
     }
 
-    private void menuRecepcionista(Sistema sistema, Scanner entrada) {
-        Recepcionista currentRecepcionista = (Recepcionista) sistema.getCurrentUser();
+    private void menuRecepcionista(Sistema sistema, Scanner entrada, Recepcionista currentRecepcionista) {
         boolean salir = false;
         while (!salir) {
             System.out.println();
@@ -249,7 +267,7 @@ public class Menu {
             String opcion = entrada.nextLine().trim();
             switch (opcion) {
                 case "1":
-                    System.out.println("Habitaciones Disponibles");
+                    System.out.println("Mostrar Habitaciones");
                     System.out.println(currentRecepcionista.mostrarHabitaciones());
                     break;
                 case "2":
@@ -367,7 +385,7 @@ public class Menu {
         }
     }
 
-    private void menuUsuario(Sistema sistema, Scanner entrada) {
+    private void menuUsuario(Sistema sistema, Scanner entrada, Usuario currentUser) {
         boolean salir = false;
         while (!salir) {
             System.out.println();

@@ -4,8 +4,9 @@ import exceptions.*;
 import interfaces.IAgrega_Quita_Habitaciones;
 import interfaces.IHaceBackUps;
 import interfaces.IManejaUsuarios;
+import interfaces.IMuestraDatoHotel;
 
-public class Administrador extends Usuario implements IManejaUsuarios, IHaceBackUps, IAgrega_Quita_Habitaciones {
+public class Administrador extends Usuario implements IManejaUsuarios, IHaceBackUps, IAgrega_Quita_Habitaciones, IMuestraDatoHotel {
     //El administrador también deberia poder agregar y quitar habitaciones del hotel
 
     public Administrador(String nombre, String apellido, String dni, String domicilio, String userName, String password, Sistema sistema) {
@@ -81,6 +82,33 @@ public class Administrador extends Usuario implements IManejaUsuarios, IHaceBack
         StringBuilder sb = new StringBuilder();
         for(Usuario usuario : sistema.getUsuarios().values()){
             sb.append(usuario.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String mostrarHabitaciones() {
+        StringBuilder sb = new StringBuilder();
+        for(Habitacion habitacion : sistema.getHotel().getHabitaciones().values()){
+            sb.append(habitacion.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String mostrarReservas() {
+        StringBuilder sb = new StringBuilder();
+        for(Reserva reserva : sistema.getHotel().getReservas().values()){
+            sb.append(reserva.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String mostrarEstadias() {
+        StringBuilder sb = new StringBuilder();
+        for(Estadia estadia : sistema.getHotel().getEstadias().values()){
+            sb.append(estadia.toString()).append("\n");
         }
         return sb.toString();
     }

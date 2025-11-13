@@ -2,7 +2,7 @@ package main;
 import modelo.*;
 
 import java.io.FileNotFoundException;
-
+//AVISO: El programa se puede iniciar con un usuario de nombre "default" y contraseña "default" si no se encuentra un respaldo de usuarios previos
 public class Main {
     public static void main(String[] args) {
         Sistema sistema;
