@@ -327,45 +327,44 @@ public class Menu {
                     System.out.println("Ingrese el ID de la reserva para hacer CheckIn:");
                     try {
                         currentRecepcionista.hacerCheckIn(entrada.nextInt());
-                        entrada.nextLine();
                         System.out.println("CheckIn realizado con éxito");
                     } catch (ExceptionIdNoencontrado | ExceptionEstadoIlegal e) {
                         System.out.println(e.getMessage());
                     }
+                    entrada.nextLine();
                     break;
                 case "6":
                     System.out.println("CheckOut");
                     System.out.println("Ingrese el ID de la estadia para hacer CheckOut:");
                     try {
                         Backupper.backupHistorialEstadias(currentRecepcionista.hacerCheckOut(entrada.nextInt()),"historial_estadias.json");//Guardo el historial antes de hacer el checkout
-                        entrada.nextLine();
                         System.out.println("CheckOut realizado con éxito");
                     } catch (ExceptionIdNoencontrado | ExceptionEstadoIlegal e) {
                         System.out.println(e.getMessage());
                     }
+                    entrada.nextLine();
                     break;
                 case "7":
                     System.out.println("Cambiar Estado de Mantenimiento");
                     System.out.println("Ingrese el ID de la habitacion a cambiar de estado:");
                     try {
                         currentRecepcionista.cambiarEstadoAMantenimiento(entrada.nextInt());
-                        entrada.nextLine();
                         System.out.println("El estado se actualizó con éxito");
                     } catch (ExceptionIdNoencontrado | ExceptionHabitacionNoDisponible e) {
                         System.out.println(e.getMessage());
                     }
+                    entrada.nextLine();
                     break;
                 case "8":
                     System.out.println("Terminar Mantenimiento");
                     System.out.println("Ingrese el ID de la habitacion a cambiar de estado:");
                     try {
                         currentRecepcionista.terMinarMantenimiento(entrada.nextInt());
-                        entrada.nextLine();
                         System.out.println("Mantenimiento finalizado con éxito");
                     } catch (ExceptionIdNoencontrado e) {
                         System.out.println(e.getMessage());
                     }
-
+                    entrada.nextLine();
                     break;
                 case "9":
                     try {

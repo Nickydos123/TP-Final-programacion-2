@@ -3,6 +3,8 @@ import modelo.*;
 
 import java.io.FileNotFoundException;
 //AVISO: El programa se puede iniciar con un usuario de nombre "default" y contraseña "default" si no se encuentra un respaldo de usuarios previos
+//Las reservas del hotel funcionana asi: Se reserva una habitacion y cuando se hace el checkin se elimina la reserva y esta pasa a ser una estadia.
+//Cuando se hace el checkout, la estadia y se guarda en un historial y se elimina, y la habitacion vuelve a estar libre para nuevas reservas.
 public class Main {
     public static void main(String[] args) {
         Sistema sistema;
