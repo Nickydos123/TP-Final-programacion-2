@@ -8,7 +8,7 @@ import java.util.Map;
 public class Sistema {
     private Hotel hotel;
     private Map<String,Usuario> usuarios;
-    private Usuario currentUser;
+    private String currentUser;
 
     public Sistema(Hotel hotel, Administrador admin) {
         this.hotel = hotel;
@@ -23,14 +23,15 @@ public class Sistema {
         this.currentUser = null;
     }
 
-    public void login(String userName, String password) throws ExceptionUsuarioNoAutorizado {
+    public Usuario login(String userName, String password) throws ExceptionUsuarioNoAutorizado {
         if(!usuarios.containsKey(userName)){
             throw new ExceptionUsuarioNoAutorizado("No existe un usuario con ese nombre de usuario");
         }
         if(!usuarios.get(userName).getPassword().equals(password)){
             throw new ExceptionUsuarioNoAutorizado("Constrasenia incorrecta");
         }
-        this.currentUser = usuarios.get(userName);
+        this.currentUser = usuarios.get(userName).getClass().getSimpleName();//Guardo el tipo de usuario que esta logueado en una variable String
+        return usuarios.get(userName);//Devuelvo el usuario logueado para que se pueda usar en el menu
     }
 
     public void logout() throws ExceptionNoCurrentUser {
@@ -42,15 +43,15 @@ public class Sistema {
 
     //Estos se encargan de averiguar de que tipo es mi currentUser
     public boolean isAdminLoggedIn() {
-        return currentUser instanceof Administrador;
+        return currentUser.equals("Administrador");
     }
 
     public boolean isRecepcionistaLoggedIn() {
-        return currentUser instanceof Recepcionista;
+        return currentUser.equals("Recepcionista");
     }
 
     public boolean isUserLoggedIn() {
-        return currentUser.getClass() == Usuario.class;
+        return currentUser.equals("Usuario");
     }
 
     public Map<String, Usuario> getUsuarios() {
@@ -69,11 +70,11 @@ public class Sistema {
         this.hotel = hotel;
     }
 
-    public Usuario getCurrentUser() {
+    public String getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(Usuario currentUser) {
+    public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
     }
 
